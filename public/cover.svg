@@ -1,0 +1,27 @@
+<svg width="1600" height="320" viewBox="0 0 1600 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cover terminale">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#203f1d" />
+      <stop offset="58%" stop-color="#0f2110" />
+      <stop offset="100%" stop-color="#2c1f10" />
+    </linearGradient>
+    <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse">
+      <path d="M 24 0 L 0 0 0 24" fill="none" stroke="#7dff66" stroke-opacity="0.15" />
+    </pattern>
+  </defs>
+
+  <rect width="1600" height="320" fill="url(#bg)" />
+  <rect width="1600" height="320" fill="url(#grid)" />
+
+  <g stroke="#7dff66" stroke-opacity="0.28" fill="none" stroke-width="2">
+    <path d="M 0 220 C 280 180 420 250 700 210 C 980 170 1260 240 1600 190" />
+    <path d="M 0 260 C 250 200 530 290 820 230 C 1110 170 1390 255 1600 220" />
+  </g>
+
+  <text x="42" y="78" fill="#ffce72" font-family="Courier New, monospace" font-size="40" letter-spacing="4">
+    WASTELAND RESUME PROTOCOL
+  </text>
+  <text x="44" y="118" fill="#ccffbf" font-family="Courier New, monospace" font-size="20" letter-spacing="2">
+    AUTHORIZED CANDIDATE PROFILE
+  </text>
+</svg>
