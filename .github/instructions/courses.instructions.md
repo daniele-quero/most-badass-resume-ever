@@ -13,6 +13,7 @@ One `##` section per course. Each section must contain, in this order:
 - `Duration` — indicative duration, e.g. `40 hours`, `Jun 2021 – Present`, `3 months (2022)`.
 - `Topics` — comma-separated list of topics covered.
 - `Platform` — platform, school, or provider name (include a public URL when available).
+- `Certificate` — optional, if a certificate was issued (include a public URL when available).
 
 ## Rules
 
