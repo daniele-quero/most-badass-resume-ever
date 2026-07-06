@@ -24,5 +24,33 @@ module.exports = {
       }
     ]
   },
+  overrides: [
+    {
+      files: ["src/**/*.{ts,tsx}"],
+      rules: {
+        "no-restricted-imports": [
+          "error",
+          {
+            patterns: [
+              {
+                group: ["@google/genai", "@google/genai/*"],
+                message:
+                  "The Gemini SDK must never be imported from client code."
+              },
+              {
+                group: [
+                  "**/netlify/**",
+                  "../netlify/*",
+                  "../../netlify/*"
+                ],
+                message:
+                  "Netlify functions code must not be imported from client bundle."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
   ignorePatterns: ["dist", "coverage", "node_modules"]
 };

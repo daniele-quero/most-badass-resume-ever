@@ -7,6 +7,10 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
     setupFiles: "./src/setupTests.ts",
-    css: true
+    css: true,
+    include: [
+      "src/**/*.{test,spec}.{ts,tsx}",
+      "netlify/**/*.{test,spec}.ts"
+    ]
   }
 });
