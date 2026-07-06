@@ -10,8 +10,17 @@ This file lists games published by the user on itch.io (source: https://danioque
 
 One `##` section per game. Each section must contain, in this order:
 
-- `Description` — one short sentence describing the game.
-- `Link` — full public URL to the game's itch.io page.
+- — two sentences (~2 lines) describing the game. Cover what it is, its genre/platform, core gameplay loop, and any notable mechanics or context.
+- `Link:` — full public URL to the game's itch.io page.
+
+## How to write or update a Description
+
+1. Fetch the game's itch.io page to read the description text, genre tags, and platform info.
+2. Combine what you found into two concise English sentences:
+   - Sentence 1: what the game is, its genre, platform, and core concept.
+   - Sentence 2: notable mechanics, controls, context (e.g. tutorial series, first project), or distinguishing features.
+3. Never invent facts — only write what the fetched source confirms.
+4. Each new game must be added as a new section at the beginning of the file, preserving the order of existing entries.
 
 ## Rules
 

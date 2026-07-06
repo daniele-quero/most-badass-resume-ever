@@ -1,8 +1,15 @@
 # Skills
 
 Hard and soft skills. One entry per skill or grouped set.
+## AI Skills
 
-## Hard Skills
+- GitHub Copilot
+- AI Agent Governance
+- Prompt Engineering
+- Instruction Design
+- Skill Design
+
+## IT Skills
 
 - C#
 - Java (up to 25)
@@ -13,21 +20,23 @@ Hard and soft skills. One entry per skill or grouped set.
 - Spring Boot
 - REST
 - Unity (2D/3D)
-- Programming Languages
-- Algorithms and Software Development
-- Data Acquisition and Particle Detection
-- Experimental and Applied Physics
-- Mathematics (Algebra, Geometry, Calculus, Statistics, Probability)
-- Microsoft Windows and PowerShell
+- Algorithms
 - LaTeX
 - Markdown
 - Unix and Bash Shell Scripting
+- Microsoft Windows 
+- Microsoft PowerShell
+
+## Science and Research Skills
+- Data Acquisition
+- Particle Detection
+- Experimental Physics
+- Applied Physics
+- Geometry
+- Calculus
+- Statistics
+- Probability
 - Origin (Plotting)
-- GitHub Copilot
-- AI Agent Governance
-- Prompt Engineering
-- Instruction Design
-- Skill Design
 
 ## Soft Skills
 
@@ -35,7 +44,7 @@ Hard and soft skills. One entry per skill or grouped set.
 - Problem Solving
 - Communication
 - Quick Learner
-- Googling and AI
+- Googling 
 - Problem Decomposition
 - Team Play
 - Team Leading
@@ -49,5 +58,7 @@ Hard and soft skills. One entry per skill or grouped set.
 
 - PC Hardware Assembly
 - DIY
-- Home Brewing
-- Music Reading (Drums and Transverse Flute, beginner)
+- Home Brewing 
+- Music Sheet Reading 
+- Drums (beginner)
+- Transverse Flute (beginner)
