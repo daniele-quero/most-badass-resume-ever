@@ -1,44 +1,45 @@
-import { ChatPlaceholder } from "./components/ChatPlaceholder";
+import { useState } from "react";
+import { Chat } from "./components/Chat";
 import { Tabs, type TabItem } from "./components/Tabs";
 
 const resumeTabs: TabItem[] = [
   {
     id: "welcome",
-    label: "Benvenuto",
+    label: "Welcome",
     content: (
       <article>
-        <h3>Missione</h3>
+        <h3>Mission</h3>
         <p>
-          Creo prodotti digitali che uniscono UX, robustezza tecnica e velocita
-          di consegna. Questo profilo e progettato come interfaccia terminale,
-          pronta per integrare assistenza AI in tempo reale.
+          I build digital products that blend UX, technical reliability, and
+          fast delivery. This profile is designed as a terminal-style interface,
+          ready to integrate real-time AI assistance.
         </p>
       </article>
     )
   },
   {
     id: "education",
-    label: "Formazione",
+    label: "Education",
     content: (
       <article>
-        <h3>Percorso</h3>
+        <h3>Background</h3>
         <ul>
-          <li>Laurea in discipline tecniche con focus software engineering.</li>
-          <li>Certificazioni cloud e architetture distribuite.</li>
-          <li>Formazione continua su AI product development e DX.</li>
+          <li>Degree in technical disciplines with a software engineering focus.</li>
+          <li>Cloud and distributed architecture certifications.</li>
+          <li>Continuous learning in AI product development and DX.</li>
         </ul>
       </article>
     )
   },
   {
     id: "experience",
-    label: "Esperienze",
+    label: "Experience",
     content: (
       <article>
         <h3>Field Log</h3>
         <ul className="timeline-list">
           <li>
-            <strong>Lead Developer</strong> - Progettazione front-end scalabili,
+            <strong>Lead Developer</strong> - Scalable front-end architecture,
             quality gates, CI/CD.
           </li>
           <li>
@@ -46,8 +47,8 @@ const resumeTabs: TabItem[] = [
             deploy cloud.
           </li>
           <li>
-            <strong>Product Engineer</strong> - Sviluppo feature ad alto impatto
-            con metriche orientate al valore.
+            <strong>Product Engineer</strong> - High-impact feature development
+            with value-driven metrics.
           </li>
         </ul>
       </article>
@@ -55,10 +56,10 @@ const resumeTabs: TabItem[] = [
   },
   {
     id: "skills",
-    label: "Skill",
+    label: "Skills",
     content: (
       <article>
-        <h3>Core Stack</h3>
+        <h2>Perks</h2>
         <p>
           TypeScript, React, Node.js, API architecture, test automation,
           observability, performance tuning, AI-ready interfaces.
@@ -69,9 +70,11 @@ const resumeTabs: TabItem[] = [
 ];
 
 function App() {
+  const [activeTabId, setActiveTabId] = useState("welcome");
+
   return (
     <div className="vault-shell">
-      <aside className="summary-column terminal-panel" aria-label="Profilo rapido">
+      <aside className="summary-column terminal-panel" aria-label="Quick profile">
         <p className="summary-chip">STATUS: ACTIVE</p>
         <h1 className="summary-name">Daniele Quero</h1>
         <p className="summary-role">Senior Full Stack Engineer</p>
@@ -82,17 +85,17 @@ function App() {
         </ul>
       </aside>
 
-      <main className="content-column">
+      <main className={`content-column${activeTabId !== "welcome" ? " chat-hidden" : ""}`}>
         <header className="hero-header terminal-panel">
           <img
             className="hero-cover"
             src="/cover.svg"
-            alt="Cover con stile terminale post-apocalittico"
+            alt="Post-apocalyptic terminal-style cover"
           />
           <img
             className="hero-avatar"
             src="/avatar.svg"
-            alt="Avatar profilo"
+            alt="Profile avatar"
           />
           <div className="hero-meta">
             <p className="hero-tag">WASTELAND RESUME PROTOCOL</p>
@@ -100,14 +103,16 @@ function App() {
           </div>
         </header>
 
-        <section className="tabs-wrapper terminal-panel" aria-label="Dettaglio profilo">
-          <Tabs items={resumeTabs} />
+        <section className="tabs-wrapper terminal-panel" aria-label="Profile details">
+          <Tabs items={resumeTabs} onTabChange={setActiveTabId} />
         </section>
 
-        <section className="chat-wrapper terminal-panel" aria-label="Chat placeholder">
-          <h2 className="section-title">AI Relay Console</h2>
-          <ChatPlaceholder />
-        </section>
+        {activeTabId === "welcome" && (
+          <section className="chat-wrapper terminal-panel" aria-label="Chat">
+            <h2 className="section-title">AI Relay Console</h2>
+            <Chat />
+          </section>
+        )}
       </main>
     </div>
   );

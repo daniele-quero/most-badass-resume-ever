@@ -8,9 +8,10 @@ export type TabItem = {
 
 type TabsProps = {
   items: TabItem[];
+  onTabChange?: (id: string) => void;
 };
 
-export function Tabs({ items }: TabsProps) {
+export function Tabs({ items, onTabChange }: TabsProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const groupId = useId();
   const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
@@ -22,6 +23,10 @@ export function Tabs({ items }: TabsProps) {
   const moveTo = (nextIndex: number) => {
     setActiveIndex(nextIndex);
     tabRefs.current[nextIndex]?.focus();
+    const item = items[nextIndex];
+    if (item) {
+      onTabChange?.(item.id);
+    }
   };
 
   const handleTabKeyDown = (
@@ -57,7 +62,7 @@ export function Tabs({ items }: TabsProps) {
 
   return (
     <div className="tabs-root">
-      <div className="tabs-list" role="tablist" aria-label="Sezioni curriculum">
+      <div className="tabs-list" role="tablist" aria-label="Resume sections">
         {items.map((item, index) => {
           const selected = index === activeIndex;
           const tabId = `${groupId}-tab-${item.id}`;
@@ -76,7 +81,7 @@ export function Tabs({ items }: TabsProps) {
               aria-selected={selected}
               aria-controls={panelId}
               tabIndex={selected ? 0 : -1}
-              onClick={() => setActiveIndex(index)}
+              onClick={() => moveTo(index)}
               onKeyDown={(event) => handleTabKeyDown(event, index)}
             >
               {item.label}
