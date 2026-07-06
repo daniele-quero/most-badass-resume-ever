@@ -5,7 +5,7 @@ Professional work experiences. One entry per engagement, most recent first.
 ## Alten (Apr 2026 – present)
 
 - Client/Company: PagoPA S.p.A.
-- Role summary: QA engineer and AI expert/advocate. Testing and quality assurance of a government project for fines and penalties management, with a strong focus on AI integration and automation.
+- Role summary: QA engineer and AI expert/advocate. Testing and quality assurance of a government project for payments to the public administration, with a strong focus on AI integration and automation.
 - Skills and technologies: Gherkin, Behave, Python, Github, Github Copilot, Spec-Driven Design.
 
 ## Alten (Jul 2023 – Mar 2026)
