@@ -1,7 +1,14 @@
 import { fireEvent, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { beforeEach } from "vitest";
 import App from "./App";
+import { resetPersistedChatState } from "./components/chatState";
 
 describe("App - chat visibility by active tab", () => {
+  beforeEach(() => {
+    resetPersistedChatState();
+  });
+
   it("shows chat when the Welcome tab is active", () => {
     render(<App />);
     expect(screen.getByRole("region", { name: "Chat" })).toBeInTheDocument();
@@ -26,6 +33,18 @@ describe("App - chat visibility by active tab", () => {
     fireEvent.click(screen.getByRole("tab", { name: "Education" }));
     fireEvent.click(screen.getByRole("tab", { name: "Welcome" }));
     expect(screen.getByRole("region", { name: "Chat" })).toBeInTheDocument();
+  });
+
+  it("preserves chat draft when returning to Welcome", async () => {
+    render(<App />);
+    const user = userEvent.setup();
+
+    await user.type(screen.getByLabelText("Message"), "Persistent draft");
+    fireEvent.click(screen.getByRole("tab", { name: "Education" }));
+    fireEvent.click(screen.getByRole("tab", { name: "Welcome" }));
+
+    expect(screen.getByLabelText("Message")).toHaveValue("Persistent draft");
+    expect(screen.getByRole("button", { name: "Send" })).toBeEnabled();
   });
 
   it("renders C1 as a link to the PDF opening in a new tab", () => {

@@ -9,14 +9,32 @@ import { WorkSection } from "./sections/WorkSection";
 export const WELCOME_TAB_ID = "welcome";
 
 const welcomeContent = (
-  <article>
-    <h3>Mission</h3>
-    <p>
-      I solve problems with code. Better if game- or AI-related or at least challenging.
-      <br />Father.
-      <br />Gamer.
-      <br />Fallout Enthusiast.
-    </p>
+  <article style={{ position: "relative", overflow: "hidden" }}>
+    <img
+      src="/image.png"
+      alt=""
+      aria-hidden="true"
+      style={{
+        position: "absolute",
+        top: 0,
+        right: 0,
+        height: "90%",
+        opacity: 0.18,
+        zIndex: 0,
+        pointerEvents: "none",
+        userSelect: "none",
+        mixBlendMode: "luminosity",
+      }}
+    />
+    <div style={{ position: "relative", zIndex: 1 }}>
+      <h3>Mission</h3>
+      <p>
+        I solve problems with code. Better if game- or AI-related or at least challenging.
+        <br />Father.
+        <br />Gamer.
+        <br />Fallout Enthusiast.
+      </p>
+    </div>
   </article>
 );
 
@@ -30,8 +48,26 @@ export const resumeTabs: TabItem[] = [
     id: "education",
     label: "Education",
     content: (
-      <article>
-        <AcademySection />
+      <article style={{ position: "relative", overflow: "hidden" }}>
+        <img
+          src="/image2.png"
+          alt=""
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            top: 0,
+            right: 0,
+            height: "90%",
+            opacity: 0.18,
+            zIndex: 0,
+            pointerEvents: "none",
+            userSelect: "none",
+            mixBlendMode: "luminosity",
+          }}
+        />
+        <div style={{ position: "relative", zIndex: 1 }}>
+          <AcademySection />
+        </div>
       </article>
     )
   },
@@ -39,9 +75,27 @@ export const resumeTabs: TabItem[] = [
     id: "courses",
     label: "Courses",
     content: (
-      <article>
-        <h2>Training Log</h2>
-        <CoursesSection />
+      <article style={{ position: "relative", overflow: "hidden" }}>
+        <img
+          src="/image3.png"
+          alt=""
+          aria-hidden="true"
+          style={{
+            position: "absolute",
+            top: 0,
+            right: 0,
+            height: "90%",
+            opacity: 0.18,
+            zIndex: 0,
+            pointerEvents: "none",
+            userSelect: "none",
+            mixBlendMode: "luminosity",
+          }}
+        />
+        <div style={{ position: "relative", zIndex: 1 }}>
+          <h2>Training Log</h2>
+          <CoursesSection />
+        </div>
       </article>
     )
   },

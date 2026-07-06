@@ -7,8 +7,12 @@ import {
   PROVIDER_LABELS,
   sendChat
 } from "../lib/chatClient";
-
-type ChatStatus = "idle" | "sending" | "error";
+import {
+  getPersistedChatState,
+  setPersistedChatState,
+  type ChatStatus,
+  type ChatViewState
+} from "./chatState";
 
 const greeting: ChatTurn = {
   role: "assistant",
@@ -23,16 +27,37 @@ function isAbortError(err: unknown): boolean {
 }
 
 export function Chat() {
-  const [messages, setMessages] = useState<ChatTurn[]>([greeting]);
-  const [draft, setDraft] = useState("");
-  const [status, setStatus] = useState<ChatStatus>("idle");
-  const [lastError, setLastError] = useState<string | null>(null);
-  const [provider, setProvider] = useState<ProviderId>("groq");
+  const initialState = getPersistedChatState(greeting);
+  const [messages, setMessages] = useState<ChatTurn[]>(initialState.messages);
+  const [draft, setDraft] = useState(initialState.draft);
+  const [status, setStatus] = useState<ChatStatus>(initialState.status);
+  const [lastError, setLastError] = useState<string | null>(initialState.lastError);
+  const [provider, setProvider] = useState<ProviderId>(initialState.provider);
   const abortRef = useRef<AbortController | null>(null);
+  const stateRef = useRef<ChatViewState>(initialState);
+
+  stateRef.current = {
+    messages,
+    draft,
+    status,
+    lastError,
+    provider
+  };
+
+  useEffect(() => {
+    setPersistedChatState(stateRef.current);
+  }, [messages, draft, status, lastError, provider]);
 
   useEffect(() => {
     return () => {
       abortRef.current?.abort();
+
+      const snapshot = stateRef.current;
+      setPersistedChatState({
+        ...snapshot,
+        status: snapshot.status === "sending" ? "idle" : snapshot.status,
+        lastError: snapshot.status === "sending" ? null : snapshot.lastError
+      });
     };
   }, []);
 

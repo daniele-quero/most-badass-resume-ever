@@ -14,6 +14,7 @@ vi.mock("../lib/chatClient", async () => {
 
 import { ChatClientError, sendChat } from "../lib/chatClient";
 import { Chat } from "./Chat";
+import { resetPersistedChatState } from "./chatState";
 
 const sendChatMock = sendChat as unknown as ReturnType<typeof vi.fn>;
 
@@ -22,6 +23,7 @@ const greetingSubstring = "digital twin";
 describe("Chat", () => {
   beforeEach(() => {
     sendChatMock.mockReset();
+    resetPersistedChatState();
   });
 
   it("shows the initial welcome message", () => {

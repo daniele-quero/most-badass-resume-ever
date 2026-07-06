@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
+import { getStore } from "@netlify/blobs";
 
 export type DataKey =
   | "thisisme"
@@ -22,13 +23,38 @@ export const DATA_KEYS: readonly DataKey[] = [
   "skills"
 ] as const;
 
-let cache: Record<DataKey, string> | null = null;
+export const BLOB_STORE_NAME = "resume-private";
 
-export function loadData(): Record<DataKey, string> {
-  if (cache) return cache;
+async function loadThisIsMe(): Promise<string> {
+  try {
+    const store = getStore(BLOB_STORE_NAME);
+    const content = await store.get("thisisme");
+    if (content && content.trim() !== "") return content;
+  } catch {
+    // Blob store not available (local dev without netlify dev), fall through
+  }
 
+  // Local dev fallback: read from file
+  const filePath = path.join(process.cwd(), "data", "thisisme.data.md");
+  try {
+    const content = readFileSync(filePath, "utf-8");
+    if (content && content.trim() !== "") return content;
+  } catch {
+    // File not present
+  }
+
+  throw new Error("Missing or empty data file: thisisme.data.md");
+}
+
+let cachePromise: Promise<Record<DataKey, string>> | null = null;
+
+async function _loadData(): Promise<Record<DataKey, string>> {
   const result = {} as Record<DataKey, string>;
+
+  result["thisisme"] = await loadThisIsMe();
+
   for (const key of DATA_KEYS) {
+    if (key === "thisisme") continue;
     const filePath = path.join(process.cwd(), "data", `${key}.data.md`);
     let content: string;
     try {
@@ -42,10 +68,16 @@ export function loadData(): Record<DataKey, string> {
     result[key] = content;
   }
 
-  cache = result;
-  return cache;
+  return result;
+}
+
+export function loadData(): Promise<Record<DataKey, string>> {
+  if (!cachePromise) {
+    cachePromise = _loadData();
+  }
+  return cachePromise;
 }
 
 export function __resetDataCacheForTests(): void {
-  cache = null;
+  cachePromise = null;
 }

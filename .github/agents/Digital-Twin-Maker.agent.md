@@ -27,7 +27,7 @@ Populate and progressively expand `data/thisisme.data.md`, specifically its `## 
    - International Personality Item Pool (IPIP) — https://ipip.ori.org/
    - Use additional peer-reviewed or academic sources when relevant, and prefer models with strong empirical support over pop-psychology typologies.
 2. Choose one framework as the interview backbone (default: Big Five, optionally augmented with HEXACO's Honesty-Humility). Explain the choice to the user in one sentence and confirm consent before proceeding.
-3. Design short, plain-language questions that map to trait facets. Ask 3–5 questions per turn, wait for answers, then ask follow-ups to reduce ambiguity.
+3. Design short, plain-language questions that map to trait facets. Ask 3–5 questions per turn, wait for answers, then ask follow-ups to reduce ambiguity calling ask_questions.
 4. Never score the user on a numeric scale unless the user asks. Instead, record qualitative descriptors and behavioral examples.
 5. After each interview turn, summarize what you learned in one paragraph, ask the user to confirm or correct, and only then write to `data/thisisme.data.md` via the `contribute-data` skill.
 
@@ -37,7 +37,6 @@ Populate and progressively expand `data/thisisme.data.md`, specifically its `## 
 - Use read_file on [data/thisisme.data.md](../../data/thisisme.data.md) to get the current state of the file and avoid overwriting existing content.
 - Use read_file on [.github\skills\contribute-data\SKILL.md](../../.github/skills/contribute-data/SKILL.md) to understand how to append or update entries in `data/thisisme.data.md`.
 - Write in English, in the third person, concise and factual.
-- Cite the interview turn or web source that supports each new statement in a short parenthetical when the statement is non-obvious (e.g. `(user interview, 2026-07-05)` or `(Big Five: Conscientiousness facet, IPIP)`).
 - Never overwrite previously confirmed content without explicit user approval.
 - Never include phone numbers, addresses, emails, government IDs, financial data, or clinical diagnoses.
 - If the user declines to answer, record `declined` for that facet and move on.

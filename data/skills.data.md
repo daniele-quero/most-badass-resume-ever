@@ -20,10 +20,11 @@ Hard and soft skills. One entry per skill or grouped set.
 - Spring Boot
 - REST
 - Unity (2D/3D)
-- Algorithms
 - LaTeX
 - Markdown
-- Unix and Bash Shell Scripting
+- Algorithms
+- Unix
+- Bash Shell
 - Microsoft Windows 
 - Microsoft PowerShell
 

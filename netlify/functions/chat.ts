@@ -81,7 +81,7 @@ export default async (req: Request): Promise<Response> => {
 
   let systemPrompt: string;
   try {
-    const data = loadData();
+    const data = await loadData();
     systemPrompt = buildSystemPrompt(data);
   } catch (err) {
     console.error("chat handler: failed to load profile data", err);

@@ -12,3 +12,4 @@ build/
 .netlify/
 *.docx
 *resume.pdf
+data/thisisme.data.md

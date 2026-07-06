@@ -5,7 +5,7 @@
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
-  included_files = ["data/*.data.md"]
+  included_files = ["data/academy.data.md", "data/courses.data.md", "data/gamefolio.data.md", "data/repofolio.data.md", "data/research.data.md", "data/skills.data.md", "data/work.data.md"]
 
 [[redirects]]
   from = "/api/*"

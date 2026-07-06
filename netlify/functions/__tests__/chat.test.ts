@@ -11,7 +11,7 @@ vi.mock("../lib/geminiClient", () => ({
 }));
 
 vi.mock("../lib/dataLoader", () => ({
-  loadData: vi.fn(() => ({
+  loadData: vi.fn(() => Promise.resolve({
     thisisme: "T",
     academy: "A",
     work: "W",
