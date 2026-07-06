@@ -1,0 +1,24 @@
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Avatar DQ">
+  <defs>
+    <radialGradient id="face" cx="30%" cy="30%" r="75%">
+      <stop offset="0%" stop-color="#2a4722" />
+      <stop offset="100%" stop-color="#0d1a0d" />
+    </radialGradient>
+  </defs>
+
+  <circle cx="128" cy="128" r="124" fill="#ffce72" opacity="0.35" />
+  <circle cx="128" cy="128" r="114" fill="url(#face)" stroke="#7dff66" stroke-width="4" />
+  <circle cx="128" cy="128" r="78" fill="none" stroke="#ffce72" stroke-opacity="0.8" stroke-width="3" />
+
+  <text
+    x="128"
+    y="148"
+    text-anchor="middle"
+    fill="#ccffbf"
+    font-family="Courier New, monospace"
+    font-size="68"
+    font-weight="700"
+  >
+    DQ
+  </text>
+</svg>
