@@ -16,12 +16,13 @@ One `##` section per repository. Each section must contain, in this order:
 ## How to write or update a Description
 
 1. Fetch the repository page on GitHub to read the About blurb, language breakdown, and folder structure.
-2. If the About field is empty or too short, also fetch the raw `README.md` (e.g. `https://raw.githubusercontent.com/daniele-quero/<repo>/master/README.md`) and scan commit messages for context.
+2. If the About field is empty or too short, also fetch the raw `README.md` (e.g. `https://raw.githubusercontent.com/daniele-quero/<repo>/<master or main>/README.md`) and scan commit messages for context.
 3. Combine what you found into two concise English sentences:
    - Sentence 1: what the project is and what it does.
    - Sentence 2: notable tech, tools, or structure details (language percentages, exported packages, tested patterns, etc.).
 4. Never invent facts — only write what the fetched sources confirm.
 5. Each new repository must be added as a new section at the beginning of the file, preserving the order of existing entries.
+6. Use the `contribute-data` skill to append or update entries.
 
 ## Rules
 
@@ -30,3 +31,4 @@ One `##` section per repository. Each section must contain, in this order:
 - Preserve the exact repository name.
 - Write everything in English.
 - Use the `contribute-data` skill to append or update entries.
+- Ignore `b-w-clicker` and `domande` repositories.

@@ -48,23 +48,30 @@ export const resumeTabs: TabItem[] = [
     id: "education",
     label: "Education",
     content: (
-      <article style={{ position: "relative", overflow: "hidden" }}>
-        <img
-          src="/image2.png"
-          alt=""
-          aria-hidden="true"
-          style={{
-            position: "absolute",
-            top: 0,
-            right: 0,
-            height: "90%",
-            opacity: 0.18,
-            zIndex: 0,
-            pointerEvents: "none",
-            userSelect: "none",
-            mixBlendMode: "luminosity",
-          }}
-        />
+      <article style={{ position: "relative" }}>
+        <div style={{
+          position: "sticky",
+          top: 0,
+          height: 0,
+          overflow: "visible",
+          display: "flex",
+          justifyContent: "flex-end",
+          zIndex: 0,
+          pointerEvents: "none",
+        }}>
+          <img
+            src="/image2.png"
+            alt=""
+            aria-hidden="true"
+            style={{
+              height: "200px",
+              opacity: 0.18,
+              pointerEvents: "none",
+              userSelect: "none",
+              mixBlendMode: "luminosity",
+            }}
+          />
+        </div>
         <div style={{ position: "relative", zIndex: 1 }}>
           <AcademySection />
         </div>
@@ -75,23 +82,30 @@ export const resumeTabs: TabItem[] = [
     id: "courses",
     label: "Courses",
     content: (
-      <article style={{ position: "relative", overflow: "hidden" }}>
-        <img
-          src="/image3.png"
-          alt=""
-          aria-hidden="true"
-          style={{
-            position: "absolute",
-            top: 0,
-            right: 0,
-            height: "90%",
-            opacity: 0.18,
-            zIndex: 0,
-            pointerEvents: "none",
-            userSelect: "none",
-            mixBlendMode: "luminosity",
-          }}
-        />
+      <article style={{ position: "relative" }}>
+        <div style={{
+          position: "sticky",
+          top: 0,
+          height: 0,
+          overflow: "visible",
+          display: "flex",
+          justifyContent: "flex-end",
+          zIndex: 0,
+          pointerEvents: "none",
+        }}>
+          <img
+            src="/image3.png"
+            alt=""
+            aria-hidden="true"
+            style={{
+              height: "200px",
+              opacity: 0.18,
+              pointerEvents: "none",
+              userSelect: "none",
+              mixBlendMode: "luminosity",
+            }}
+          />
+        </div>
         <div style={{ position: "relative", zIndex: 1 }}>
           <h2>Training Log</h2>
           <CoursesSection />
