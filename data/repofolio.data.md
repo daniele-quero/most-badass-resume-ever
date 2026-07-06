@@ -2,6 +2,12 @@
 
 Public repositories on GitHub under `daniele-quero`. Source: https://github.com/daniele-quero?tab=repositories
 
+## most-badass-resume-ever
+
+A PWA single-page resume built with React + TypeScript + Vite, styled as a Fallout CRT terminal with scanlines, glow effects, and a green/amber palette. Features accessible in-page tab navigation, an AI chat relay via Netlify Functions (Gemini/Groq fallback), and full PWA support with service worker and offline caching.
+The codebase is JavaScript 64%, TypeScript 31%, and CSS 4%, with Vitest + Testing Library for unit tests and ESLint for linting.
+- Link: https://github.com/daniele-quero/most-badass-resume-ever
+
 ## ac-2d-primer
 
 - Unity/C# primer project covering 2D fundamentals, built almost entirely in C# (98%) with ShaderLab and HLSL materials.
