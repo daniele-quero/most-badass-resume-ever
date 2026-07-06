@@ -25,7 +25,7 @@ npm install
 ```bash
 npm run dev
 ```
-Avvia ambiente di sviluppo.
+Avvia il frontend Vite in locale.
 
 ```bash
 npm run build
@@ -35,7 +35,7 @@ Esegue type-check (`tsc -b`) e build di produzione Vite.
 ```bash
 npm run test
 ```
-Esegue test unitari (tabs + chat placeholder).
+Esegue i test unitari e di integrazione leggera su tabs, chat e App.
 
 ```bash
 npm run lint
@@ -46,6 +46,16 @@ Esegue lint su file TypeScript/TSX.
 npm run preview
 ```
 Avvia preview del build locale.
+
+## Struttura del progetto
+
+- `src/App.tsx` compone la shell, lo stato della tab attiva e l'aggancio della chat.
+- `src/components/resume/` contiene i blocchi della UI curriculum estratti da App.
+- `src/components/resume/sections/` ha una section component per ogni blocco dati.
+- `src/components/resume/markdownSection.ts` gestisce il parsing condiviso dei file markdown in `data/`.
+- `src/components/Tabs.tsx` mantiene la navigazione accessibile tra le tab.
+- `src/components/Chat.tsx` e la chat placeholder locale.
+- `data/*.data.md` contiene i contenuti testuali del profilo, separati per dominio.
 
 ## Layout implementato
 
@@ -64,6 +74,18 @@ Il componente tabs implementa:
 - Navigazione tastiera: frecce, Home, End
 - Focus management e `aria-selected`
 
+## Chat locale e integrazione AI
+
+La chat e ancora un placeholder locale in `src/components/Chat.tsx`.
+
+Per provarla con le Netlify Functions:
+
+1. crea un `.env` con almeno una chiave `CHAT_GEMINI_API_KEY` o `CHAT_GROQ_API_KEY`;
+2. avvia `npx --yes netlify@26.1.0 dev --offline`;
+3. apri l'app su `http://localhost:8888`.
+
+Nota: `npm run dev` serve solo il frontend Vite.
+
 ## PWA
 
 Configurata tramite vite-plugin-pwa con:
@@ -72,16 +94,6 @@ Configurata tramite vite-plugin-pwa con:
 - Icone locali SVG (192/512)
 - Registrazione service worker (`virtual:pwa-register`)
 - Caching statico e fallback app shell offline
-
-## Integrazione AI futura (chat)
-
-La chat e un placeholder pronto a integrazione:
-
-1. Sostituire la risposta fallback in `src/components/ChatPlaceholder.tsx` con chiamata API LLM.
-2. Gestire streaming token (SSE/WebSocket o fetch stream).
-3. Aggiungere stato di loading/error e retry.
-4. Collegare auth e rate limiting lato backend.
-5. Estendere test per mock API e casi di errore rete.
 
 ## Note asset
 
