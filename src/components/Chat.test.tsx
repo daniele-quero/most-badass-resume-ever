@@ -8,21 +8,37 @@ vi.mock("../lib/chatClient", async () => {
   );
   return {
     ...actual,
-    sendChat: vi.fn()
+    sendChatStream: vi.fn()
   };
 });
 
-import { ChatClientError, sendChat } from "../lib/chatClient";
+import {
+  ChatClientError,
+  sendChatStream,
+  type StreamCallbacks
+} from "../lib/chatClient";
 import { Chat } from "./Chat";
 import { resetPersistedChatState } from "./chatState";
 
-const sendChatMock = sendChat as unknown as ReturnType<typeof vi.fn>;
+const sendChatStreamMock = sendChatStream as unknown as ReturnType<typeof vi.fn>;
+
+/** Mock implementation that emits `text` as a single delta then resolves. */
+function streamOnce(text: string) {
+  return async (
+    _messages: unknown,
+    _provider: unknown,
+    callbacks?: StreamCallbacks
+  ) => {
+    callbacks?.onDelta?.(text);
+    return text;
+  };
+}
 
 const greetingSubstring = "digital twin";
 
 describe("Chat", () => {
   beforeEach(() => {
-    sendChatMock.mockReset();
+    sendChatStreamMock.mockReset();
     resetPersistedChatState();
   });
 
@@ -33,7 +49,7 @@ describe("Chat", () => {
     ).toBeInTheDocument();
   });
 
-  it("empty submit does not call sendChat", async () => {
+  it("empty submit does not call sendChatStream", async () => {
     render(<Chat />);
     const user = userEvent.setup();
 
@@ -43,11 +59,11 @@ describe("Chat", () => {
     await user.click(screen.getByLabelText("Message"));
     await user.keyboard("{Enter}");
 
-    expect(sendChatMock).not.toHaveBeenCalled();
+    expect(sendChatStreamMock).not.toHaveBeenCalled();
   });
 
   it("first submit sends history with greeting + first user and renders reply", async () => {
-    sendChatMock.mockResolvedValueOnce("I am Daniele.");
+    sendChatStreamMock.mockImplementationOnce(streamOnce("I am Daniele."));
 
     render(<Chat />);
     const user = userEvent.setup();
@@ -56,11 +72,11 @@ describe("Chat", () => {
     await user.type(input, "Who are you?");
     await user.click(screen.getByRole("button", { name: "Send" }));
 
-    await waitFor(() => expect(sendChatMock).toHaveBeenCalledTimes(1));
-    const firstCall = sendChatMock.mock.calls[0]!;
+    await waitFor(() => expect(sendChatStreamMock).toHaveBeenCalledTimes(1));
+    const firstCall = sendChatStreamMock.mock.calls[0]!;
     const historyArg = firstCall[0] as import("../lib/chatClient").ChatTurn[];
     const providerArg = firstCall[1];
-    const signalArg = firstCall[2];
+    const signalArg = firstCall[3];
     expect(Array.isArray(historyArg)).toBe(true);
     expect(historyArg).toHaveLength(2);
     expect(historyArg[0]!.role).toBe("assistant");
@@ -74,9 +90,9 @@ describe("Chat", () => {
   });
 
   it("second submit sends complete history (greeting + user1 + assistant1 + user2)", async () => {
-    sendChatMock
-      .mockResolvedValueOnce("I am Daniele.")
-      .mockResolvedValueOnce("I worked at Alten.");
+    sendChatStreamMock
+      .mockImplementationOnce(streamOnce("I am Daniele."))
+      .mockImplementationOnce(streamOnce("I worked at Alten."));
 
     render(<Chat />);
     const user = userEvent.setup();
@@ -89,8 +105,8 @@ describe("Chat", () => {
     await user.type(screen.getByLabelText("Message"), "Where do you work?");
     await user.click(screen.getByRole("button", { name: "Send" }));
 
-    await waitFor(() => expect(sendChatMock).toHaveBeenCalledTimes(2));
-    const [historyArg] = sendChatMock.mock.calls[1]!;
+    await waitFor(() => expect(sendChatStreamMock).toHaveBeenCalledTimes(2));
+    const [historyArg] = sendChatStreamMock.mock.calls[1]!;
     expect(historyArg).toHaveLength(4);
     expect(historyArg[0].role).toBe("assistant");
     expect(historyArg[1]).toEqual({ role: "user", content: "Who are you?" });
@@ -101,7 +117,7 @@ describe("Chat", () => {
   });
 
   it("sending state shows loader and disables input", async () => {
-    sendChatMock.mockImplementation(() => new Promise(() => {}));
+    sendChatStreamMock.mockImplementation(() => new Promise(() => {}));
 
     render(<Chat />);
     const user = userEvent.setup();
@@ -122,7 +138,7 @@ describe("Chat", () => {
   });
 
   it("error state shows alert, keeps user message, and offers Retry", async () => {
-    sendChatMock.mockRejectedValueOnce(
+    sendChatStreamMock.mockRejectedValueOnce(
       new ChatClientError("bad", "INVALID_REQUEST", 400)
     );
 
@@ -138,10 +154,10 @@ describe("Chat", () => {
     expect(screen.getByText("Question?")).toBeInTheDocument();
   });
 
-  it("Retry calls sendChat with the same history without duplicating the user turn", async () => {
-    sendChatMock
+  it("Retry calls sendChatStream with the same history without duplicating the user turn", async () => {
+    sendChatStreamMock
       .mockRejectedValueOnce(new ChatClientError("bad", "INVALID_REQUEST", 400))
-      .mockResolvedValueOnce("Reply after retry.");
+      .mockImplementationOnce(streamOnce("Reply after retry."));
 
     render(<Chat />);
     const user = userEvent.setup();
@@ -151,11 +167,11 @@ describe("Chat", () => {
 
     await screen.findByRole("alert");
 
-    const firstCallHistory = sendChatMock.mock.calls[0]![0];
+    const firstCallHistory = sendChatStreamMock.mock.calls[0]![0];
     await user.click(screen.getByRole("button", { name: "Retry" }));
 
-    await waitFor(() => expect(sendChatMock).toHaveBeenCalledTimes(2));
-    const retryHistory = sendChatMock.mock.calls[1]![0];
+    await waitFor(() => expect(sendChatStreamMock).toHaveBeenCalledTimes(2));
+    const retryHistory = sendChatStreamMock.mock.calls[1]![0];
     expect(retryHistory).toEqual(firstCallHistory);
     expect(retryHistory[retryHistory.length - 1]).toEqual({
       role: "user",

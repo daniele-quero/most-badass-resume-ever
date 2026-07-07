@@ -5,7 +5,7 @@ import {
   type ProviderId,
   PROVIDER_IDS,
   PROVIDER_LABELS,
-  sendChat
+  sendChatStream
 } from "../lib/chatClient";
 import {
   getPersistedChatState,
@@ -66,9 +66,20 @@ export function Chat() {
     const controller = new AbortController();
     abortRef.current = controller;
 
+    let acc = "";
     try {
-      const reply = await sendChat(history, provider, controller.signal);
-      setMessages([...history, { role: "assistant", content: reply }]);
+      await sendChatStream(
+        history,
+        provider,
+        {
+          onDelta: (text) => {
+            acc += text;
+            setMessages([...history, { role: "assistant", content: acc }]);
+          }
+        },
+        controller.signal
+      );
+      setMessages([...history, { role: "assistant", content: acc }]);
       setStatus("idle");
       setLastError(null);
     } catch (err) {
@@ -141,12 +152,13 @@ export function Chat() {
             <p className="chat-text">{m.content}</p>
           </li>
         ))}
-        {status === "sending" && (
-          <li className="chat-line assistant chat-loading" aria-live="polite">
-            <p className="chat-role">Daniele</p>
-            <p className="chat-text">…</p>
-          </li>
-        )}
+        {status === "sending" &&
+          messages[messages.length - 1]?.role === "user" && (
+            <li className="chat-line assistant chat-loading" aria-live="polite">
+              <p className="chat-role">Daniele</p>
+              <p className="chat-text">…</p>
+            </li>
+          )}
       </ul>
 
       {status === "error" && lastError && (

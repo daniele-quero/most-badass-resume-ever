@@ -54,7 +54,7 @@ Avvia preview del build locale.
 - `src/components/resume/sections/` ha una section component per ogni blocco dati.
 - `src/components/resume/markdownSection.ts` gestisce il parsing condiviso dei file markdown in `data/`.
 - `src/components/Tabs.tsx` mantiene la navigazione accessibile tra le tab.
-- `src/components/Chat.tsx` e la chat placeholder locale.
+- `src/components/Chat.tsx` gestisce la chat AI con streaming progressivo.
 - `data/*.data.md` contiene i contenuti testuali del profilo, separati per dominio.
 
 ## Layout implementato
@@ -74,9 +74,13 @@ Il componente tabs implementa:
 - Navigazione tastiera: frecce, Home, End
 - Focus management e `aria-selected`
 
-## Chat locale e integrazione AI
+## Chat AI
 
-La chat e ancora un placeholder locale in `src/components/Chat.tsx`.
+La chat usa le Netlify Functions in `src/components/Chat.tsx` e mostra le risposte in streaming mentre arrivano.
+
+Il backend prova i provider in fallback e si ferma sul primo token disponibile; se il provider preferito non risponde in tempo, passa al successivo.
+
+Prima di costruire il prompt, il contenuto dei file `data/*.data.md` viene filtrato in memoria: le righe bullet che contengono link o date vengono scartate e la sezione `research` non viene inviata al modello.
 
 Per provarla con le Netlify Functions:
 

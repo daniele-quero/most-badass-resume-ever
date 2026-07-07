@@ -1,13 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { UpstreamError } from "../lib/geminiClient";
 
-vi.mock("../lib/geminiClient", () => ({
-  generateReply: vi.fn(),
-  UpstreamError: class UpstreamError extends Error {
-    constructor(message: string) {
-      super(message);
-      this.name = "UpstreamError";
-    }
-  }
+vi.mock("../lib/providers", () => ({
+  openStreamWithFallback: vi.fn(),
+  PROVIDER_IDS: ["gemini", "groq"] as const
 }));
 
 vi.mock("../lib/dataLoader", () => ({
@@ -51,6 +47,10 @@ function makeRequest(
     init.body = typeof body === "string" ? body : JSON.stringify(body);
   }
   return new Request("http://localhost/api/chat", init);
+}
+
+async function* fromChunks(chunks: string[]): AsyncGenerator<string> {
+  for (const c of chunks) yield c;
 }
 
 describe("chat handler", () => {
@@ -110,11 +110,12 @@ describe("chat handler", () => {
     expect(body.error.code).toBe("INVALID_REQUEST");
   });
 
-  it("happy path → 200 with reply and correct generateReply args", async () => {
-    const { generateReply } = await import("../lib/geminiClient");
-    (generateReply as ReturnType<typeof vi.fn>).mockResolvedValue(
-      "Sono Daniele"
-    );
+  it("happy path → 200 SSE stream with meta/delta/done and correct args", async () => {
+    const { openStreamWithFallback } = await import("../lib/providers");
+    (openStreamWithFallback as ReturnType<typeof vi.fn>).mockResolvedValue({
+      provider: "groq",
+      stream: fromChunks(["Sono ", "Daniele"])
+    });
 
     const handler = await importHandler();
     const messages = [{ role: "user", content: "Chi sei?" }];
@@ -122,33 +123,59 @@ describe("chat handler", () => {
     const res = await handler(req);
 
     expect(res.status).toBe(200);
-    const body = (await res.json()) as { reply: string; provider: string };
-    expect(body.reply).toBe("Sono Daniele");
-    expect(typeof body.provider).toBe("string");
+    expect(res.headers.get("content-type")).toContain("text/event-stream");
 
-    expect(generateReply).toHaveBeenCalledTimes(1);
-    const call = (generateReply as ReturnType<typeof vi.fn>).mock
-      .calls[0][0] as {
-      apiKey: string;
-      history: unknown;
-      systemPrompt: string;
-    };
-    expect(call.apiKey).toBe("test-key");
-    expect(call.history).toEqual(messages);
-    expect(call.systemPrompt).toContain("<thisisme>");
-    expect(call.systemPrompt).toContain("T");
-    expect(call.systemPrompt).toContain("<academy>");
-    expect(call.systemPrompt).toContain("A");
-    expect(call.systemPrompt).toContain("<work>");
-    expect(call.systemPrompt).toContain("W");
-    expect(call.systemPrompt).toContain("<skills>");
-    expect(call.systemPrompt).toContain("S");
+    const text = await res.text();
+    expect(text).toContain("event: meta");
+    expect(text).toContain('"provider":"groq"');
+    expect(text).toContain("event: delta");
+    expect(text).toContain('"text":"Sono "');
+    expect(text).toContain('"text":"Daniele"');
+    expect(text).toContain("event: done");
+
+    expect(openStreamWithFallback).toHaveBeenCalledTimes(1);
+    const [preferred, callArgs] = (
+      openStreamWithFallback as ReturnType<typeof vi.fn>
+    ).mock.calls[0] as [
+      string,
+      { apiKeys: Record<string, string>; history: unknown; systemPrompt: string }
+    ];
+    expect(typeof preferred).toBe("string");
+    expect(callArgs.apiKeys.gemini).toBe("test-key");
+    expect(callArgs.history).toEqual(messages);
+    expect(callArgs.systemPrompt).toContain("<thisisme>");
+    expect(callArgs.systemPrompt).toContain("<skills>");
+    expect(callArgs.systemPrompt).not.toContain("<research>");
   });
 
-  it("SDK failure → 500 UPSTREAM_ERROR and apiKey never logged", async () => {
-    const { generateReply } = await import("../lib/geminiClient");
-    (generateReply as ReturnType<typeof vi.fn>).mockRejectedValue(
-      new Error("gemini down")
+  it("mid-stream failure → SSE error event, no apiKey leaked", async () => {
+    async function* broken(): AsyncGenerator<string> {
+      yield "partial";
+      throw new UpstreamError("stream died");
+    }
+    const { openStreamWithFallback } = await import("../lib/providers");
+    (openStreamWithFallback as ReturnType<typeof vi.fn>).mockResolvedValue({
+      provider: "gemini",
+      stream: broken()
+    });
+
+    const handler = await importHandler();
+    const req = makeRequest("POST", {
+      messages: [{ role: "user", content: "hi" }]
+    });
+    const res = await handler(req);
+
+    expect(res.status).toBe(200);
+    const text = await res.text();
+    expect(text).toContain('"text":"partial"');
+    expect(text).toContain("event: error");
+    expect(text).toContain("UPSTREAM_ERROR");
+  });
+
+  it("all providers fail before first token → 500 UPSTREAM_ERROR, apiKey never logged", async () => {
+    const { openStreamWithFallback } = await import("../lib/providers");
+    (openStreamWithFallback as ReturnType<typeof vi.fn>).mockRejectedValue(
+      new UpstreamError("all down")
     );
 
     const handler = await importHandler();

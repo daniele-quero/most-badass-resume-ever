@@ -2,21 +2,25 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   CHAT_ENDPOINT,
   ChatClientError,
-  sendChat,
+  sendChatStream,
   type ChatTurn
 } from "./chatClient";
 
 const originalFetch = globalThis.fetch;
 
-function makeResponse(init: {
-  ok: boolean;
-  status: number;
-  json: () => Promise<unknown>;
-}) {
-  return init as unknown as Response;
+function sseResponse(events: string[], init?: { status?: number }): Response {
+  const payload = events.map((e) => `${e}\n\n`).join("");
+  return new Response(payload, {
+    status: init?.status ?? 200,
+    headers: { "content-type": "text/event-stream" }
+  });
 }
 
-describe("chatClient.sendChat", () => {
+function delta(text: string): string {
+  return `event: delta\ndata: ${JSON.stringify({ text })}`;
+}
+
+describe("chatClient.sendChatStream", () => {
   let fetchMock: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
@@ -29,18 +33,27 @@ describe("chatClient.sendChat", () => {
     vi.restoreAllMocks();
   });
 
-  it("returns reply on success and calls fetch with correct args", async () => {
+  it("streams deltas, invokes callbacks, and returns the full reply", async () => {
     fetchMock.mockResolvedValue(
-      makeResponse({
-        ok: true,
-        status: 200,
-        json: async () => ({ reply: "Hello!" })
-      })
+      sseResponse([
+        `event: meta\ndata: ${JSON.stringify({ provider: "groq" })}`,
+        delta("Hello"),
+        delta(" world"),
+        "event: done\ndata: {}"
+      ])
     );
 
+    const deltas: string[] = [];
+    let provider: string | undefined;
     const messages: ChatTurn[] = [{ role: "user", content: "hi" }];
-    const result = await sendChat(messages, "gemini");
-    expect(result).toBe("Hello!");
+    const result = await sendChatStream(messages, "gemini", {
+      onProvider: (p) => (provider = p),
+      onDelta: (t) => deltas.push(t)
+    });
+
+    expect(result).toBe("Hello world");
+    expect(deltas).toEqual(["Hello", " world"]);
+    expect(provider).toBe("groq");
 
     expect(fetchMock).toHaveBeenCalledTimes(1);
     const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit];
@@ -49,22 +62,22 @@ describe("chatClient.sendChat", () => {
     expect(
       (init.headers as Record<string, string>)["content-type"]
     ).toMatch(/application\/json/);
-    expect(JSON.parse(init.body as string)).toEqual({ messages, provider: "gemini" });
+    expect(JSON.parse(init.body as string)).toEqual({
+      messages,
+      provider: "gemini"
+    });
   });
 
   it("throws ChatClientError with structured error payload on HTTP error", async () => {
     fetchMock.mockResolvedValue(
-      makeResponse({
-        ok: false,
-        status: 400,
-        json: async () => ({
-          error: { code: "INVALID_REQUEST", message: "bad" }
-        })
-      })
+      new Response(
+        JSON.stringify({ error: { code: "INVALID_REQUEST", message: "bad" } }),
+        { status: 400, headers: { "content-type": "application/json" } }
+      )
     );
 
     await expect(
-      sendChat([{ role: "user", content: "x" }], "gemini")
+      sendChatStream([{ role: "user", content: "x" }], "gemini")
     ).rejects.toMatchObject({
       name: "ChatClientError",
       code: "INVALID_REQUEST",
@@ -75,17 +88,11 @@ describe("chatClient.sendChat", () => {
 
   it("throws ChatClientError HTTP_ERROR when error payload cannot be parsed", async () => {
     fetchMock.mockResolvedValue(
-      makeResponse({
-        ok: false,
-        status: 500,
-        json: async () => {
-          throw new Error("nope");
-        }
-      })
+      new Response("not json", { status: 500 })
     );
 
     await expect(
-      sendChat([{ role: "user", content: "x" }], "gemini")
+      sendChatStream([{ role: "user", content: "x" }], "gemini")
     ).rejects.toMatchObject({
       name: "ChatClientError",
       code: "HTTP_ERROR",
@@ -93,20 +100,34 @@ describe("chatClient.sendChat", () => {
     });
   });
 
-  it("throws MALFORMED_RESPONSE when success body is missing reply", async () => {
-    fetchMock.mockResolvedValue(
-      makeResponse({
-        ok: true,
-        status: 200,
-        json: async () => ({ notReply: 1 })
-      })
-    );
+  it("throws MALFORMED_RESPONSE when the OK response has no body", async () => {
+    fetchMock.mockResolvedValue(new Response(null, { status: 200 }));
 
     await expect(
-      sendChat([{ role: "user", content: "x" }], "gemini")
+      sendChatStream([{ role: "user", content: "x" }], "gemini")
     ).rejects.toMatchObject({
       name: "ChatClientError",
       code: "MALFORMED_RESPONSE"
+    });
+  });
+
+  it("throws ChatClientError when the stream emits an error event", async () => {
+    fetchMock.mockResolvedValue(
+      sseResponse([
+        delta("partial"),
+        `event: error\ndata: ${JSON.stringify({
+          code: "UPSTREAM_ERROR",
+          message: "boom"
+        })}`
+      ])
+    );
+
+    await expect(
+      sendChatStream([{ role: "user", content: "x" }], "gemini")
+    ).rejects.toMatchObject({
+      name: "ChatClientError",
+      code: "UPSTREAM_ERROR",
+      message: "boom"
     });
   });
 
@@ -114,7 +135,7 @@ describe("chatClient.sendChat", () => {
     fetchMock.mockRejectedValue(new TypeError("fetch failed"));
 
     await expect(
-      sendChat([{ role: "user", content: "x" }], "gemini")
+      sendChatStream([{ role: "user", content: "x" }], "gemini")
     ).rejects.toMatchObject({
       name: "ChatClientError",
       code: "NETWORK_ERROR"
@@ -130,7 +151,7 @@ describe("chatClient.sendChat", () => {
 
     let caught: unknown;
     try {
-      await sendChat([{ role: "user", content: "x" }], "gemini");
+      await sendChatStream([{ role: "user", content: "x" }], "gemini");
     } catch (e) {
       caught = e;
     }

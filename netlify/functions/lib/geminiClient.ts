@@ -1,7 +1,10 @@
 import { GoogleGenAI } from "@google/genai";
 import type { ChatTurn } from "./types";
+import { MAX_OUTPUT_TOKENS } from "./constants";
 
 export const GEMINI_MODEL = "gemini-2.0-flash";
+
+export { MAX_OUTPUT_TOKENS } from "./constants";
 
 export class UpstreamError extends Error {
   constructor(message: string) {
@@ -14,36 +17,46 @@ interface GenerateReplyArgs {
   systemPrompt: string;
   history: ChatTurn[];
   apiKey: string;
+  signal?: AbortSignal;
 }
 
-export async function generateReply(args: GenerateReplyArgs): Promise<string> {
-  const { systemPrompt, history, apiKey } = args;
-
-  const contents = history.map((turn) => ({
+function toContents(history: ChatTurn[]) {
+  return history.map((turn) => ({
     role: turn.role === "assistant" ? "model" : "user",
     parts: [{ text: turn.content }]
   }));
+}
+
+/**
+ * Streams the model reply chunk by chunk, yielding non-empty text deltas.
+ * Honors the provided AbortSignal (passed to the SDK and re-checked per chunk).
+ */
+export async function* streamReply(
+  args: GenerateReplyArgs
+): AsyncGenerator<string> {
+  const { systemPrompt, history, apiKey, signal } = args;
 
   try {
     const ai = new GoogleGenAI({ apiKey });
-    const response = await ai.models.generateContent({
+    const stream = await ai.models.generateContentStream({
       model: GEMINI_MODEL,
-      contents,
+      contents: toContents(history),
       config: {
-        systemInstruction: { parts: [{ text: systemPrompt }] }
+        systemInstruction: { parts: [{ text: systemPrompt }] },
+        maxOutputTokens: MAX_OUTPUT_TOKENS,
+        abortSignal: signal
       }
     });
 
-    const primary = response.text;
-    const fallback =
-      response.candidates?.[0]?.content?.parts?.[0]?.text ?? undefined;
-    const text = (primary ?? fallback ?? "").trim();
-
-    if (!text) {
-      throw new UpstreamError("Empty response from model");
+    for await (const chunk of stream) {
+      if (signal?.aborted) {
+        throw new UpstreamError("Aborted");
+      }
+      const text = chunk.text ?? "";
+      if (text) {
+        yield text;
+      }
     }
-
-    return text;
   } catch (err) {
     if (err instanceof UpstreamError) throw err;
     const message =

@@ -2,7 +2,7 @@ import { loadData } from "./lib/dataLoader";
 import { buildSystemPrompt } from "./lib/promptBuilder";
 import { parseChatRequest, InvalidRequestError } from "./lib/validation";
 import { UpstreamError } from "./lib/geminiClient";
-import { generateWithFallback } from "./lib/providers";
+import { openStreamWithFallback, type ProviderId } from "./lib/providers";
 
 interface ErrorBody {
   error: {
@@ -29,6 +29,56 @@ function jsonResponse(
 
 function errorBody(code: string, message: string): ErrorBody {
   return { error: { code, message } };
+}
+
+function sseEvent(event: string, data: unknown): string {
+  return `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`;
+}
+
+/**
+ * Builds a Server-Sent Events stream:
+ *  - `meta`  once, carrying the committed provider id
+ *  - `delta` per text chunk
+ *  - `done`  on successful completion
+ *  - `error` if the upstream stream breaks mid-flight (tokens already sent)
+ */
+function buildSseResponse(
+  provider: ProviderId,
+  stream: AsyncGenerator<string>
+): Response {
+  const encoder = new TextEncoder();
+  const body = new ReadableStream<Uint8Array>({
+    async start(controller) {
+      controller.enqueue(encoder.encode(sseEvent("meta", { provider })));
+      try {
+        for await (const chunk of stream) {
+          controller.enqueue(encoder.encode(sseEvent("delta", { text: chunk })));
+        }
+        controller.enqueue(encoder.encode(sseEvent("done", {})));
+      } catch (err) {
+        console.error("chat handler: stream interrupted", err);
+        controller.enqueue(
+          encoder.encode(
+            sseEvent("error", {
+              code: "UPSTREAM_ERROR",
+              message: "Stream interrupted"
+            })
+          )
+        );
+      } finally {
+        controller.close();
+      }
+    }
+  });
+
+  return new Response(body, {
+    status: 200,
+    headers: {
+      "content-type": "text/event-stream; charset=utf-8",
+      "cache-control": "no-cache, no-transform",
+      connection: "keep-alive"
+    }
+  });
 }
 
 export default async (req: Request): Promise<Response> => {
@@ -91,14 +141,15 @@ export default async (req: Request): Promise<Response> => {
     );
   }
 
-  let reply: string;
-  let usedProvider: string;
+  // Fallback happens during time-to-first-token; only after a provider commits
+  // its first chunk do we start streaming a 200 SSE response. If every provider
+  // fails before the first token, return a clean JSON error instead.
   try {
-    ({ reply, provider: usedProvider } = await generateWithFallback(provider, {
-      systemPrompt,
-      history: messages,
-      apiKeys
-    }));
+    const { provider: usedProvider, stream } = await openStreamWithFallback(
+      provider,
+      { systemPrompt, history: messages, apiKeys }
+    );
+    return buildSseResponse(usedProvider, stream);
   } catch (err) {
     if (err instanceof UpstreamError) {
       console.error("chat handler: upstream error", err.message);
@@ -110,6 +161,4 @@ export default async (req: Request): Promise<Response> => {
       errorBody("UPSTREAM_ERROR", "Model request failed")
     );
   }
-
-  return jsonResponse(200, { reply, provider: usedProvider });
 };
