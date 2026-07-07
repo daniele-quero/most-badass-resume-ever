@@ -2,6 +2,7 @@ import { type TabItem } from "../Tabs";
 import { AcademySection } from "./sections/AcademySection";
 import { CoursesSection } from "./sections/CoursesSection";
 import { GamesSection } from "./sections/GamesSection";
+import { ResearchSection } from "./sections/ResearchSection.tsx";
 import { RepositoriesSection } from "./sections/RepositoriesSection";
 import { SkillsSection } from "./sections/SkillsSection";
 import { WorkSection } from "./sections/WorkSection";
@@ -150,6 +151,16 @@ export const resumeTabs: TabItem[] = [
       <article>
         <h2>Tech Stash</h2>
         <RepositoriesSection />
+      </article>
+    )
+  },
+  {
+    id: "research",
+    label: "Research",
+    content: (
+      <article>
+        <h2>Research Log</h2>
+        <ResearchSection />
       </article>
     )
   }

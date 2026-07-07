@@ -87,4 +87,13 @@ describe("App - chat visibility by active tab", () => {
     expect(gameLinks.length).toBeGreaterThan(0);
     expect(screen.queryByText("Link: https://danioquero.itch.io/family-zoo")).not.toBeInTheDocument();
   });
+
+  it("renders Link as clickable label in Research without showing raw article URL text", () => {
+    render(<App />);
+    fireEvent.click(screen.getByRole("tab", { name: "Research" }));
+
+    const researchLinks = screen.getAllByRole("link", { name: "Link" });
+    expect(researchLinks.length).toBeGreaterThan(0);
+    expect(screen.queryByText("Article link: https://doi.org/10.1088/1742-6596/703/1/012020")).not.toBeInTheDocument();
+  });
 });
