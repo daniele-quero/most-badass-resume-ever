@@ -10,7 +10,7 @@ import { WorkSection } from "./sections/WorkSection";
 export const WELCOME_TAB_ID = "welcome";
 
 const welcomeContent = (
-  <article style={{ position: "relative", overflow: "hidden" }}>
+  <article style={{ position: "relative", overflow: "auto" }}>
     <img
       src="/image.png"
       alt=""

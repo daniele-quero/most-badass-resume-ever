@@ -606,6 +606,19 @@ body::before {
     overscroll-behavior: contain;
   }
 
+  /* When enabled, let the page (body) handle scrolling so touching anywhere scrolls the content
+     while preserving chat inner scroll behavior. Applied for mobile when active tab is not Welcome. */
+  body[data-full-scroll="true"] .terminal-panel,
+  body[data-full-scroll="true"] .tabs-wrapper {
+    overflow: visible;
+  }
+
+  body[data-full-scroll="true"] .tab-panel {
+    overflow: visible;
+    -webkit-overflow-scrolling: auto;
+    overscroll-behavior: auto;
+  }
+
   .terminal-panel {
     box-shadow: inset 0 0 0 1px rgba(76, 241, 125, 0.2), 0 0 12px rgba(76, 241, 125, 0.22);
   }

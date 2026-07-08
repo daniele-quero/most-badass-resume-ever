@@ -83,6 +83,25 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    if (typeof window === "undefined" || typeof document === "undefined") {
+      return;
+    }
+
+    const attr = "data-full-scroll";
+    const enabled = isMobileViewport && activeTabId !== WELCOME_TAB_ID;
+
+    if (enabled) {
+      document.body.setAttribute(attr, "true");
+    } else {
+      document.body.removeAttribute(attr);
+    }
+
+    return () => {
+      document.body.removeAttribute(attr);
+    };
+  }, [isMobileViewport, activeTabId]);
+
   return (
     <div className="vault-shell">
       {isMobileViewport && (
