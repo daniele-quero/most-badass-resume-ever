@@ -83,7 +83,8 @@ export function Tabs({ items, onTabChange, swipeEnabled = false }: TabsProps) {
 
   const handleTouchStart = (event: ReactTouchEvent<HTMLDivElement>) => {
     if (!event.touches || event.touches.length === 0) return;
-    const t = event.touches[0];
+    const t = event.touches.item(0);
+    if (!t) return;
     touch.current.isDown = true;
     touch.current.startX = t.clientX;
     touch.current.startY = t.clientY;
@@ -92,7 +93,8 @@ export function Tabs({ items, onTabChange, swipeEnabled = false }: TabsProps) {
 
   const handleTouchMove = (event: ReactTouchEvent<HTMLDivElement>) => {
     if (!touch.current.isDown || !event.touches || event.touches.length === 0) return;
-    const t = event.touches[0];
+    const t = event.touches.item(0);
+    if (!t) return;
     const dx = t.clientX - touch.current.startX;
     const dy = t.clientY - touch.current.startY;
     if (Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy)) {
@@ -105,7 +107,7 @@ export function Tabs({ items, onTabChange, swipeEnabled = false }: TabsProps) {
     if (!touch.current.isDown) return;
     touch.current.isDown = false;
     // Use changedTouches when available
-    const t = event.changedTouches && event.changedTouches.length ? event.changedTouches[0] : null;
+    const t = event.changedTouches && event.changedTouches.length ? event.changedTouches.item(0) : null;
     if (!t) return;
     const dx = t.clientX - touch.current.startX;
     const dy = t.clientY - touch.current.startY;
