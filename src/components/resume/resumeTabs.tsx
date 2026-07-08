@@ -118,9 +118,34 @@ export const resumeTabs: TabItem[] = [
     id: "experience",
     label: "Experience",
     content: (
-      <article>
-        <h2>Quest Log</h2>
-        <WorkSection />
+      <article style={{ position: "relative" }}>
+        <div style={{
+          position: "sticky",
+          top: 0,
+          height: 0,
+          overflow: "visible",
+          display: "flex",
+          justifyContent: "flex-end",
+          zIndex: 0,
+          pointerEvents: "none",
+        }}>
+          <img
+            src="/image4.png"
+            alt=""
+            aria-hidden="true"
+            style={{
+              height: "200px",
+              opacity: 0.18,
+              pointerEvents: "none",
+              userSelect: "none",
+              mixBlendMode: "luminosity",
+            }}
+          />
+        </div>
+        <div style={{ position: "relative", zIndex: 1 }}>
+          <h2>Quest Log</h2>
+          <WorkSection />
+        </div>
       </article>
     )
   },
@@ -128,9 +153,34 @@ export const resumeTabs: TabItem[] = [
     id: "skills",
     label: "Skills",
     content: (
-      <article>
-        <h2>Perks</h2>
-        <SkillsSection />
+      <article style={{ position: "relative" }}>
+        <div style={{
+          position: "sticky",
+          top: 0,
+          height: 0,
+          overflow: "visible",
+          display: "flex",
+          justifyContent: "flex-end",
+          zIndex: 0,
+          pointerEvents: "none",
+        }}>
+          <img
+            src="/image3.png"
+            alt=""
+            aria-hidden="true"
+            style={{
+              height: "200px",
+              opacity: 0.18,
+              pointerEvents: "none",
+              userSelect: "none",
+              mixBlendMode: "luminosity",
+            }}
+          />
+        </div>
+        <div style={{ position: "relative", zIndex: 1 }}>
+          <h2>Perks</h2>
+          <SkillsSection />
+        </div>
       </article>
     )
   },

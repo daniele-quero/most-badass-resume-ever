@@ -8,6 +8,7 @@ These instructions apply to all coding agents working in this workspace.
 - Read [README.md](README.md) first for setup and full command reference.
 - Runtime baseline: Node.js 20+ and npm 10+.
 - Keep changes focused and small; avoid unrelated refactors.
+ - Runtime baseline: Node.js 20+ and npm 10+. Note: Netlify's build environment uses Node.js v22 and may set a specific TypeScript compiler option during CI builds. If you see compilation or runtime mismatches between local and Netlify builds, reproduce the build with Node v22 locally and align tsconfig.json / tsc options with Netlify's environment.
 
 ## Commands Agents Should Use
 - Install deps: `npm install`
