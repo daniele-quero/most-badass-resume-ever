@@ -2,6 +2,12 @@
 
 Public repositories on GitHub under `daniele-quero`. Source: https://github.com/daniele-quero?tab=repositories
 
+## keep-the-check-pwa
+
+- A Progressive Web App that helps you track prices while shopping: point the camera at a price tag or receipt and the app sends the image to a server-side proxy (Netlify Functions), which forwards it to a configured AI vision provider and returns a structured list of products and prices for review and saving to a running total. API keys are kept server-side and never reach the browser.
+- Built with TypeScript (88.9%), Vite, Vitest, and Netlify Functions for a server-side AI proxy and provider fallback policy; includes a service worker, PWA manifest, and a test suite.
+- Link: https://github.com/daniele-quero/keep-the-check-pwa
+
 ## most-badass-resume-ever
 
 - This very app!
