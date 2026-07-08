@@ -1,8 +1,17 @@
 const C1_CERTIFICATE_PDF_URL = "/Daniele_QUERO_Certificate_of_Language_Proficiency_full_version.pdf";
 
-export function ProfileSummary() {
+type ProfileSummaryProps = {
+  isCollapsed?: boolean;
+};
+
+export function ProfileSummary({ isCollapsed = false }: ProfileSummaryProps) {
   return (
-    <aside className="summary-column terminal-panel" aria-label="Quick profile">
+    <aside
+      id="profile-summary"
+      className="summary-column terminal-panel"
+      aria-label="Quick profile"
+      hidden={isCollapsed}
+    >
       <p className="summary-chip">STATUS: ACTIVE</p>
       <h1 className="summary-name">Daniele Quero</h1>
       <p className="summary-role">Senior Java/AI Engineer</p>

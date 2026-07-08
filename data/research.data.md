@@ -17,40 +17,34 @@ Academic and research experiences: activities during university and PhD, confere
 
 ## International Workshop "Spontaneous and Induced Fission of Very Heavy and Super-Heavy Nuclei"
 
-- Attended the international workshop at ECT* Trento focused on spontaneous and induced fission of very heavy and super-heavy nuclei. (user interview, 2026-07-05)
+- Attended the international workshop at ECT* Trento focused on spontaneous and induced fission of very heavy and super-heavy nuclei.
 - 09 Apr 2018 - 13 Apr 2018
 - Institution: ECT* Trento, Trento, IT
 
 ## Experiment at JYFL (Finland)
 
-- Took part in an experiment at JYFL in Finland, including experimental setup mounting, data analysis software development and use, and energy loss simulations. (user interview, 2026-07-05)
-- 12 Feb 2018 - 01 Mar 2018
+- Took part in an experiment at JYFL in Finland, including experimental setup mounting, data analysis software development and use, and energy loss simulations.
+- 27 Aug 2016 - 03 Sep 2016 / 12 Feb 2018 - 01 Mar 2018
 - Institution: JYFL, Finland
 
 ## International Workshop "Nuclear Reactions on Nucleons and Nuclei"
 
-- Attended the international workshop in Messina on nuclear reactions on nucleons and nuclei. (user interview, 2026-07-05)
+- Attended the international workshop in Messina on nuclear reactions on nucleons and nuclei.
 - 25 Oct 2017 - 26 Oct 2017
-
-## Experiment at JYFL (Finland)
-
-- Took part in an experiment at JYFL in Finland, including experimental setup mounting, data analysis software development and use, and energy loss simulations. (user interview, 2026-07-05)
-- 12 Jun 2017 - 02 Jul 2017
-- Institution: JYFL, Finland
 
 ## Terzo Incontro Nazionale di Fisica Nucleare INFN 2016
 
-- Participated in the Terzo Incontro Nazionale di Fisica Nucleare INFN 2016 conference and was a shared winner of the Best Young Researcher Talk Award. (user interview, 2026-07-05)
+- Participated in the Terzo Incontro Nazionale di Fisica Nucleare INFN 2016 conference and was a shared winner of the Best Young Researcher Talk Award.
 - 14 Nov 2016 - 16 Nov 2016
 
 ## Euroschool on Exotic Beams
 
-- Attended the Euroschool on Exotic Beams and presented a poster. (user interview, 2026-07-05)
+- Attended the Euroschool on Exotic Beams and presented a poster.
 - 27 Aug 2016 - 03 Sep 2016
 
 ## Experiment at IPN Orsay (France)
 
-- Took part in an experiment at IPN Orsay in France, including experimental setup mounting, data analysis software development and use, and energy loss simulations. (user interview, 2026-07-05)
+- Took part in an experiment at IPN Orsay in France, including experimental setup mounting, data analysis software development and use, and energy loss simulations.
 - 21 Jun 2016 - 05 Jul 2016
 - Institution: IPN Orsay, France
 

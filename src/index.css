@@ -514,6 +514,10 @@ body::before {
   cursor: not-allowed;
 }
 
+.mobile-summary-toggle {
+  display: none;
+}
+
 @keyframes panel-pulse {
   from {
     box-shadow: inset 0 0 0 1px rgba(76, 241, 125, 0.25), 0 0 10px rgba(76, 241, 125, 0.2);
@@ -525,20 +529,93 @@ body::before {
 }
 
 @media (max-width: 980px) {
+  body {
+    height: auto;
+    min-height: 100dvh;
+    overflow: auto;
+  }
+
   #root {
+    height: auto;
+    min-height: 100dvh;
     padding: 0.8rem;
   }
 
   .vault-shell {
     grid-template-columns: 1fr;
+    height: auto;
+    min-height: calc(100dvh - 1.6rem);
+    align-content: start;
+  }
+
+  .mobile-summary-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 44px;
+    padding: 0.55rem 0.95rem;
+    border: 1px solid var(--amber);
+    background: rgba(38, 31, 14, 0.82);
+    color: var(--amber);
+    font: inherit;
+    font-size: calc(0.86rem + var(--font-bump));
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+
+  .mobile-summary-toggle:focus-visible {
+    outline: 2px solid var(--amber);
+    outline-offset: 2px;
+  }
+
+  .mobile-summary-toggle[aria-expanded="true"] {
+    box-shadow: var(--glow-amber);
   }
 
   .summary-column {
-    order: 2;
+    order: 1;
+  }
+
+  .summary-column[hidden] {
+    display: none;
   }
 
   .content-column {
-    order: 1;
+    order: 2;
+    height: auto;
+    grid-template-rows: auto auto auto;
+  }
+
+  .content-column.chat-hidden {
+    grid-template-rows: auto auto;
+  }
+
+  .tab-trigger,
+  .chat-submit {
+    min-height: 44px;
+    padding: 0.56rem 0.95rem;
+    touch-action: manipulation;
+  }
+
+  .tab-panel,
+  .chat-log {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+
+  .terminal-panel {
+    box-shadow: inset 0 0 0 1px rgba(76, 241, 125, 0.2), 0 0 12px rgba(76, 241, 125, 0.22);
+  }
+
+  .terminal-panel::after {
+    opacity: 0.2;
+  }
+
+  body::before {
+    opacity: 0.13;
   }
 
   .hero-avatar {
@@ -573,5 +650,28 @@ body::before {
 
   .chat-submit {
     width: 100%;
+  }
+}
+
+@media (max-width: 420px) {
+  .hero-avatar {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tabs-wrapper,
+  .chat-wrapper {
+    animation: none;
+  }
+
+  .tab-trigger,
+  .chat-submit,
+  .mobile-summary-toggle {
+    transition: none;
+  }
+
+  .terminal-panel::after {
+    opacity: 0.16;
   }
 }

@@ -44,7 +44,7 @@ export default defineConfig({
         navigateFallback: "index.html"
       },
       devOptions: {
-        enabled: true
+        enabled: false
       }
     })
   ]

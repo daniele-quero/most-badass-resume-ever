@@ -47,8 +47,8 @@ describe("dataLoader", () => {
   it("caches result across calls (async, resolves once)", async () => {
     await loadData();
     await loadData();
-    // readFileSync called once per non-thisisme file on first call, not again on second
-    expect(readSpy).toHaveBeenCalledTimes(DATA_KEYS.length - 1 /* thisisme from blob/file once */);
+    // readFileSync called once per key on first call (thisisme included in local fallback), not again on second
+    expect(readSpy).toHaveBeenCalledTimes(DATA_KEYS.length);
   });
 
   it("re-reads after __resetDataCacheForTests()", async () => {

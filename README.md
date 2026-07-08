@@ -66,6 +66,26 @@ Avvia preview del build locale.
 - Chat placeholder sotto i tabs pronta per integrazione AI
 - Estetica CRT/terminal con glow, scanlines e palette verde/ambra
 
+## Mobile UX
+
+Per viewport mobile (breakpoint principale `980px`) il layout adotta alcune ottimizzazioni senza alterare la resa desktop:
+
+- il layout passa a colonna unica con scrolling pagina abilitato;
+- la sezione profilo laterale diventa collassabile tramite pulsante `Show profile` / `Hide profile`;
+- i controlli touch principali (tab e invio chat) hanno target minimo da 44px;
+- pannelli scrollabili con inerzia touch e overscroll contenuto;
+- riduzione effetti animati/overlay su mobile e rispetto di `prefers-reduced-motion`.
+
+Se su mobile vedi ancora il layout vecchio, chiudi e riapri la PWA oppure svuota la cache del sito: il Service Worker potrebbe servire una versione precedente finche non completa l'update.
+
+File principali coinvolti:
+
+- `src/App.tsx`
+- `src/components/resume/ProfileSummary.tsx`
+- `src/components/resume/HeroHeader.tsx`
+- `src/index.css`
+- `src/components/ProfileSummary.test.tsx`
+
 ## Accessibilita tabs
 
 Il componente tabs implementa:
