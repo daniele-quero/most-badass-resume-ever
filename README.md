@@ -76,6 +76,11 @@ Per viewport mobile (breakpoint principale `980px`) il layout adotta alcune otti
 - pannelli scrollabili con inerzia touch e overscroll contenuto;
 - riduzione effetti animati/overlay su mobile e rispetto di `prefers-reduced-motion`.
 
+Additional note: mobile scrolling behavior was recently improved so that on small
+viewports the page can be scrolled by touching anywhere (not only side panels)
+for all tabs except `Welcome`. This is controlled by a runtime flag and a CSS
+hook; see `src/App.tsx` and `src/index.css` (commit `e1ef448`).
+
 Se su mobile vedi ancora il layout vecchio, chiudi e riapri la PWA oppure svuota la cache del sito: il Service Worker potrebbe servire una versione precedente finche non completa l'update.
 
 File principali coinvolti:
