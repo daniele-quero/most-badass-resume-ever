@@ -122,7 +122,7 @@ function App() {
         <HeroHeader />
 
         <section className="tabs-wrapper terminal-panel" aria-label="Profile details">
-          <Tabs items={resumeTabs} onTabChange={setActiveTabId} />
+          <Tabs items={resumeTabs} onTabChange={setActiveTabId} swipeEnabled={isMobileViewport} />
         </section>
 
         {isWelcomeTabActive && (
