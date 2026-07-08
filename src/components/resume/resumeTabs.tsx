@@ -95,7 +95,7 @@ export const resumeTabs: TabItem[] = [
           pointerEvents: "none",
         }}>
           <img
-            src="/image5.png"
+            src="/image3.png"
             alt=""
             aria-hidden="true"
             style={{
