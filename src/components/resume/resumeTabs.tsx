@@ -188,9 +188,34 @@ export const resumeTabs: TabItem[] = [
     id: "games",
     label: "Games",
     content: (
-      <article>
-        <h2>Vault Inventory</h2>
-        <GamesSection />
+      <article style={{ position: "relative" }}>
+        <div style={{
+          position: "sticky",
+          top: 0,
+          height: 0,
+          overflow: "visible",
+          display: "flex",
+          justifyContent: "flex-end",
+          zIndex: 0,
+          pointerEvents: "none",
+        }}>
+          <img
+            src="/image6.png"
+            alt=""
+            aria-hidden="true"
+            style={{
+              height: "200px",
+              opacity: 0.18,
+              pointerEvents: "none",
+              userSelect: "none",
+              mixBlendMode: "luminosity",
+            }}
+          />
+        </div>
+        <div style={{ position: "relative", zIndex: 1 }}>
+          <h2>Vault Inventory</h2>
+          <GamesSection />
+        </div>
       </article>
     )
   },
