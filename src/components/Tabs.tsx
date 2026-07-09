@@ -52,7 +52,9 @@ export function Tabs({ items, onTabChange, swipeEnabled = false }: TabsProps) {
     touch.current.hasMoved = false;
     try {
       (event.target as Element).setPointerCapture?.(event.pointerId);
-    } catch {}
+    } catch {
+      // Some browsers can reject capture when gesture ownership changes.
+    }
   };
 
   const handlePointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
@@ -78,7 +80,9 @@ export function Tabs({ items, onTabChange, swipeEnabled = false }: TabsProps) {
     }
     try {
       (event.target as Element).releasePointerCapture?.(event.pointerId);
-    } catch {}
+    } catch {
+      // Ignore release errors if pointer capture was not acquired.
+    }
   };
 
   const handleTouchStart = (event: ReactTouchEvent<HTMLDivElement>) => {
