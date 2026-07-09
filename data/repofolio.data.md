@@ -63,15 +63,4 @@ Public repositories on GitHub under `daniele-quero`. Source: https://github.com/
 - 2D Unity space shooter game used as the basis for a series of development tutorials published on Medium (https://danio-quero.medium.com/).
 - Features boss AI (Phase II), C# gameplay systems, and GLSL shaders for visual effects.
 - Link: https://github.com/daniele-quero/galaxy-shooter-2d
-
-## learn-c-sharp-with-unity
-
-- A Unity-based C# learning project covering variables, methods, and custom classes through hands-on, in-engine exercises.
-- Written entirely in C#, it serves as a practical complement to any beginner C# or game development course.
-- Link: https://github.com/daniele-quero/learn-c-sharp-with-unity
-
-## version-control-exercise
-
-- A minimal Unity project created as a hands-on exercise in setting up and managing a Git repository for a Unity workflow.
-- Covers the basics of `.gitignore` configuration, initial commits, and version control integration for game projects.
-- Link: https://github.com/daniele-quero/version-control-exercise
+ 
