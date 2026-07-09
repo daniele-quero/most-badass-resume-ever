@@ -95,7 +95,7 @@ export const resumeTabs: TabItem[] = [
           pointerEvents: "none",
         }}>
           <img
-            src="/image3.png"
+            src="/image5.png"
             alt=""
             aria-hidden="true"
             style={{
@@ -223,9 +223,34 @@ export const resumeTabs: TabItem[] = [
     id: "repositories",
     label: "Repositories",
     content: (
-      <article>
-        <h2>Tech Stash</h2>
-        <RepositoriesSection />
+      <article style={{ position: "relative" }}>
+        <div style={{
+          position: "sticky",
+          top: 0,
+          height: 0,
+          overflow: "visible",
+          display: "flex",
+          justifyContent: "flex-end",
+          zIndex: 0,
+          pointerEvents: "none",
+        }}>
+          <img
+            src="/image7.png"
+            alt=""
+            aria-hidden="true"
+            style={{
+              height: "200px",
+              opacity: 0.18,
+              pointerEvents: "none",
+              userSelect: "none",
+              mixBlendMode: "luminosity",
+            }}
+          />
+        </div>
+        <div style={{ position: "relative", zIndex: 1 }}>
+          <h2>Tech Stash</h2>
+          <RepositoriesSection />
+        </div>
       </article>
     )
   },
