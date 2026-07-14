@@ -100,3 +100,16 @@ Important behavior rule:
 Clarification:
 - `npm run dev` serves only the frontend on port 5173.
 - For end-to-end local behavior (including AI proxy), use Netlify dev and port 8888.
+
+## Push policy for `main` / `master`
+
+- Purpose: prevent automatic Netlify deploys that consume credits.
+
+- Operational rules:
+	- Commits and pushes to branches other than `main` and `master`: allowed.
+	- Commits to `main` and `master`: allowed.
+	- Pushes to `main` and `master`: MUST NOT be performed automatically. Any agent, script, or workflow that intends to push to `main` or `master` must request explicit human confirmation each time before performing the push (use an ask/confirmation tool and obtain approval).
+
+- Reason: pushes to `main`/`master` trigger Netlify deploys which may consume credits; therefore pushes must only occur after human approval.
+
+- Recommendation: for intentional deployments prefer opening a Pull Request or performing a manual push from a developer's environment after explicit confirmation.
