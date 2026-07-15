@@ -4,7 +4,7 @@ applyTo: "data/repofolio.data.md"
 
 # repofolio.data.md instructions
 
-This file lists **public** GitHub repositories owned by the user (source: https://github.com/daniele-quero?tab=repositories).
+This file lists **public** GitHub repositories owned by the user (source: https://github.com/daniele-quero?tab=repositories). Also, non-personal repositories with contributions from the user `daniele-quero` are included (to be searched in https://github.com/daniele-quero). The file is used to generate a portfolio of the user's work.
 
 ## Schema
 

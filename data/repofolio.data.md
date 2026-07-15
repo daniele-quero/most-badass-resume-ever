@@ -1,6 +1,13 @@
 # Public Repositories
 
-Public repositories on GitHub under `daniele-quero`. Source: https://github.com/daniele-quero?tab=repositories
+Public repositories on GitHub under `daniele-quero`. Source: https://github.com/daniele-quero?tab=repositories.
+Contributions to non-personal repositories are also included (to be searched in https://github.com/daniele-quero).
+
+## pagopa-platform-integration-test
+
+- Integration test repository for the PagoPA platform: collects BDD scenarios and automation scripts for API, integration, and end-to-end test suites; suites are written mainly in Python with Behave/Gherkin and produce Allure reports, with some historical Cucumber.js and Playwright suites.
+- Primary languages are Python (≈66%), Gherkin (≈22%), and JavaScript (≈12%); includes reusable CI workflows, a bridge CLI for dispatching test runs, and published documentation via GitHub Pages.
+- Link: https://github.com/pagopa/pagopa-platform-integration-test
 
 ## keep-the-check-pwa
 
