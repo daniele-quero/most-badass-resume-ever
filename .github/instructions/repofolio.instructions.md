@@ -13,6 +13,8 @@ One `##` section per repository. Each section must contain, in this order:
 - Two sentences (~2 lines) describing the repository. Cover what the project does, its tech stack (primary languages, notable tools), and any distinguishing features (WebGL build, .unitypackage, boss AI, etc.).
 - `Link:` — full **public** URL to the repository on GitHub.
 
+if the repo is non-personal, add a note in the title line, e.g. `## <repo-name> (contributions)`."
+
 ## How to write or update a Description
 
 1. Fetch the repository page on GitHub to read the About blurb, language breakdown, and folder structure.
