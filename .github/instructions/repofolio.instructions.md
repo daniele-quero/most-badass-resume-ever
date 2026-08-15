@@ -1,5 +1,5 @@
 ---
-applyTo: "data/repofolio.data.md"
+applyTo: data/repofolio.data.md
 ---
 
 # repofolio.data.md instructions
@@ -12,8 +12,8 @@ One `##` section per repository. Each section must contain, in this order:
 
 - Two sentences (~2 lines) describing the repository. Cover what the project does, its tech stack (primary languages, notable tools), and any distinguishing features (WebGL build, .unitypackage, boss AI, etc.).
 - `Link:` — full **public** URL to the repository on GitHub.
-
-if the repo is non-personal and daniele-quero only made contributions to it, add a note in the title line, e.g. `## <repo-name> (contributions)`."
+- If the repo is non-personal and daniele-quero only made contributions to it, add a note in the title line, e.g. `## <repo-name> (contributions)`.
+- If the repo is non-personal, add a note in the description, e.g. `Daniele contributed to the <feature> feature.`
 
 ## How to write or update a Description
 
@@ -21,10 +21,11 @@ if the repo is non-personal and daniele-quero only made contributions to it, add
 2. If the About field is empty or too short, also fetch the raw `README.md` (e.g. `https://raw.githubusercontent.com/daniele-quero/<repo>/<master or main>/README.md`) and scan commit messages for context.
 3. Combine what you found into two concise English sentences:
    - Sentence 1: what the project is and what it does.
-   - Sentence 2: notable tech, tools, or structure details (language percentages, exported packages, tested patterns, etc.).
+   - Sentence 2: notable tech, tools, or structure details (language percentages, exported packages, tested patterns, etc.) **VERY SHORT**.
 4. Never invent facts — only write what the fetched sources confirm.
 5. Each new repository must be added as a new section at the beginning of the file, preserving the order of existing entries.
 6. Use the `contribute-data` skill to append or update entries.
+7. If the repository is  non-personal, try to infer the user's contributions from the commit history.
 
 ## Rules
 

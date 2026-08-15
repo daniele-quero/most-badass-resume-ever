@@ -26,12 +26,11 @@ const sendChatStreamMock = sendChatStream as unknown as ReturnType<typeof vi.fn>
 function streamOnce(text: string) {
   return async (
     _messages: unknown,
-    _provider: unknown,
-    callbacks?: StreamCallbacks
-  ) => {
-    callbacks?.onDelta?.(text);
-    return text;
-  };
+  callbacks?: StreamCallbacks
+) => {
+  callbacks?.onDelta?.(text);
+  return text;
+};
 }
 
 const greetingSubstring = "digital twin";
@@ -42,11 +41,12 @@ describe("Chat", () => {
     resetPersistedChatState();
   });
 
-  it("shows the initial welcome message", () => {
+  it("shows the initial welcome message without a model selector", () => {
     render(<Chat />);
     expect(
       screen.getByText((text) => text.includes(greetingSubstring))
     ).toBeInTheDocument();
+    expect(screen.queryByLabelText(/provider/i)).not.toBeInTheDocument();
   });
 
   it("empty submit does not call sendChatStream", async () => {
@@ -75,14 +75,16 @@ describe("Chat", () => {
     await waitFor(() => expect(sendChatStreamMock).toHaveBeenCalledTimes(1));
     const firstCall = sendChatStreamMock.mock.calls[0]!;
     const historyArg = firstCall[0] as import("../lib/chatClient").ChatTurn[];
-    const providerArg = firstCall[1];
-    const signalArg = firstCall[3];
+    const callbacksArg = firstCall[1];
+    const signalArg = firstCall[2];
     expect(Array.isArray(historyArg)).toBe(true);
     expect(historyArg).toHaveLength(2);
     expect(historyArg[0]!.role).toBe("assistant");
     expect(historyArg[0]!.content).toContain(greetingSubstring);
     expect(historyArg[1]).toEqual({ role: "user", content: "Who are you?" });
-    expect(typeof providerArg).toBe("string");
+    expect(callbacksArg).toEqual(
+      expect.objectContaining({ onDelta: expect.any(Function) })
+    );
     expect(signalArg).toBeInstanceOf(AbortSignal);
 
     expect(await screen.findByText("I am Daniele.")).toBeInTheDocument();

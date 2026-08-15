@@ -1,6 +1,7 @@
 export type ChatRole = "user" | "assistant";
 export type ProviderId = "gemini" | "groq";
 
+export const DEFAULT_CHAT_MODEL = "auto:fast";
 export const PROVIDER_IDS: ProviderId[] = ["gemini", "groq"];
 export const PROVIDER_LABELS: Record<ProviderId, string> = {
   gemini: "Gemini (Google)",
@@ -75,17 +76,30 @@ function parseSseEvent(raw: string): { event: string; data: string } {
  */
 export async function sendChatStream(
   messages: ChatTurn[],
-  provider: ProviderId,
-  callbacks?: StreamCallbacks,
+  providerOrCallbacks?: ProviderId | StreamCallbacks,
+  callbacksOrSignal?: StreamCallbacks | AbortSignal,
   signal?: AbortSignal
 ): Promise<string> {
+  const callbacks =
+    providerOrCallbacks && typeof providerOrCallbacks === "object"
+      ? (providerOrCallbacks as StreamCallbacks)
+      : (callbacksOrSignal as StreamCallbacks | undefined);
+  const requestSignal =
+    providerOrCallbacks && typeof providerOrCallbacks === "object"
+      ? (callbacksOrSignal as AbortSignal | undefined)
+      : signal ?? (callbacksOrSignal as AbortSignal | undefined);
+
   let res: Response;
   try {
     res = await fetch(CHAT_ENDPOINT, {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ messages, provider }),
-      signal
+      body: JSON.stringify({
+        model: DEFAULT_CHAT_MODEL,
+        stream: true,
+        messages
+      }),
+      signal: requestSignal
     });
   } catch (err) {
     if (isAbortError(err)) {

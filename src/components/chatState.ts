@@ -1,4 +1,4 @@
-import { type ChatTurn, type ProviderId } from "../lib/chatClient";
+import { type ChatTurn } from "../lib/chatClient";
 
 export type ChatStatus = "idle" | "sending" | "error";
 
@@ -7,7 +7,6 @@ export type ChatViewState = {
   draft: string;
   status: ChatStatus;
   lastError: string | null;
-  provider: ProviderId;
 };
 
 function createInitialChatState(greeting: ChatTurn): ChatViewState {
@@ -15,8 +14,7 @@ function createInitialChatState(greeting: ChatTurn): ChatViewState {
     messages: [greeting],
     draft: "",
     status: "idle",
-    lastError: null,
-    provider: "groq"
+    lastError: null
   };
 }
 
