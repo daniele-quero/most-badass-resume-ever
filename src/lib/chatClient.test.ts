@@ -46,7 +46,7 @@ describe("chatClient.sendChatStream", () => {
     const deltas: string[] = [];
     let provider: string | undefined;
     const messages: ChatTurn[] = [{ role: "user", content: "hi" }];
-    const result = await sendChatStream(messages, "gemini", {
+    const result = await sendChatStream(messages, {
       onProvider: (p) => (provider = p),
       onDelta: (t) => deltas.push(t)
     });
@@ -63,8 +63,9 @@ describe("chatClient.sendChatStream", () => {
       (init.headers as Record<string, string>)["content-type"]
     ).toMatch(/application\/json/);
     expect(JSON.parse(init.body as string)).toEqual({
-      messages,
-      provider: "gemini"
+      model: "auto:fast",
+      stream: true,
+      messages
     });
   });
 
@@ -77,7 +78,7 @@ describe("chatClient.sendChatStream", () => {
     );
 
     await expect(
-      sendChatStream([{ role: "user", content: "x" }], "gemini")
+      sendChatStream([{ role: "user", content: "x" }])
     ).rejects.toMatchObject({
       name: "ChatClientError",
       code: "INVALID_REQUEST",
@@ -92,7 +93,7 @@ describe("chatClient.sendChatStream", () => {
     );
 
     await expect(
-      sendChatStream([{ role: "user", content: "x" }], "gemini")
+      sendChatStream([{ role: "user", content: "x" }])
     ).rejects.toMatchObject({
       name: "ChatClientError",
       code: "HTTP_ERROR",
@@ -104,7 +105,7 @@ describe("chatClient.sendChatStream", () => {
     fetchMock.mockResolvedValue(new Response(null, { status: 200 }));
 
     await expect(
-      sendChatStream([{ role: "user", content: "x" }], "gemini")
+      sendChatStream([{ role: "user", content: "x" }])
     ).rejects.toMatchObject({
       name: "ChatClientError",
       code: "MALFORMED_RESPONSE"
@@ -123,7 +124,7 @@ describe("chatClient.sendChatStream", () => {
     );
 
     await expect(
-      sendChatStream([{ role: "user", content: "x" }], "gemini")
+      sendChatStream([{ role: "user", content: "x" }])
     ).rejects.toMatchObject({
       name: "ChatClientError",
       code: "UPSTREAM_ERROR",
@@ -135,7 +136,7 @@ describe("chatClient.sendChatStream", () => {
     fetchMock.mockRejectedValue(new TypeError("fetch failed"));
 
     await expect(
-      sendChatStream([{ role: "user", content: "x" }], "gemini")
+      sendChatStream([{ role: "user", content: "x" }])
     ).rejects.toMatchObject({
       name: "ChatClientError",
       code: "NETWORK_ERROR"
@@ -151,7 +152,7 @@ describe("chatClient.sendChatStream", () => {
 
     let caught: unknown;
     try {
-      await sendChatStream([{ role: "user", content: "x" }], "gemini");
+      await sendChatStream([{ role: "user", content: "x" }]);
     } catch (e) {
       caught = e;
     }

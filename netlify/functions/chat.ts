@@ -1,8 +1,11 @@
+import type { ChatTurn } from "./lib/types";
 import { loadData } from "./lib/dataLoader";
 import { buildSystemPrompt } from "./lib/promptBuilder";
 import { parseChatRequest, InvalidRequestError } from "./lib/validation";
-import { UpstreamError } from "./lib/geminiClient";
-import { openStreamWithFallback, type ProviderId } from "./lib/providers";
+
+const DEFAULT_CHAT_MODEL = "auto:fast";
+const AI_GATEWAY_API_KEY_ENV = "AI_GATEWAY_API_KEY";
+const AI_GATEWAY_CHAT_URL_ENV = "AI_GATEWAY_CHAT_URL";
 
 interface ErrorBody {
   error: {
@@ -31,54 +34,25 @@ function errorBody(code: string, message: string): ErrorBody {
   return { error: { code, message } };
 }
 
-function sseEvent(event: string, data: unknown): string {
-  return `event: ${event}\ndata: ${JSON.stringify(data)}\n\n`;
-}
+function parseUpstreamErrorPayload(payload: unknown): {
+  code: string;
+  message: string;
+} {
+  if (typeof payload !== "object" || payload === null) {
+    return { code: "UPSTREAM_ERROR", message: "Model request failed" };
+  }
 
-/**
- * Builds a Server-Sent Events stream:
- *  - `meta`  once, carrying the committed provider id
- *  - `delta` per text chunk
- *  - `done`  on successful completion
- *  - `error` if the upstream stream breaks mid-flight (tokens already sent)
- */
-function buildSseResponse(
-  provider: ProviderId,
-  stream: AsyncGenerator<string>
-): Response {
-  const encoder = new TextEncoder();
-  const body = new ReadableStream<Uint8Array>({
-    async start(controller) {
-      controller.enqueue(encoder.encode(sseEvent("meta", { provider })));
-      try {
-        for await (const chunk of stream) {
-          controller.enqueue(encoder.encode(sseEvent("delta", { text: chunk })));
-        }
-        controller.enqueue(encoder.encode(sseEvent("done", {})));
-      } catch (err) {
-        console.error("chat handler: stream interrupted", err);
-        controller.enqueue(
-          encoder.encode(
-            sseEvent("error", {
-              code: "UPSTREAM_ERROR",
-              message: "Stream interrupted"
-            })
-          )
-        );
-      } finally {
-        controller.close();
-      }
-    }
-  });
+  const error = (payload as { error?: unknown }).error;
+  if (typeof error !== "object" || error === null) {
+    return { code: "UPSTREAM_ERROR", message: "Model request failed" };
+  }
 
-  return new Response(body, {
-    status: 200,
-    headers: {
-      "content-type": "text/event-stream; charset=utf-8",
-      "cache-control": "no-cache, no-transform",
-      connection: "keep-alive"
-    }
-  });
+  const code = (error as { code?: unknown }).code;
+  const message = (error as { message?: unknown }).message;
+  return {
+    code: typeof code === "string" ? code : "UPSTREAM_ERROR",
+    message: typeof message === "string" ? message : "Model request failed"
+  };
 }
 
 export default async (req: Request): Promise<Response> => {
@@ -90,17 +64,14 @@ export default async (req: Request): Promise<Response> => {
     );
   }
 
-  const apiKeys = {
-    gemini: process.env["CHAT_GEMINI_API_KEY"] ?? "",
-    groq: process.env["CHAT_GROQ_API_KEY"] ?? ""
-  };
+  const apiKey = process.env[AI_GATEWAY_API_KEY_ENV] ?? "";
+  const upstreamUrl = process.env[AI_GATEWAY_CHAT_URL_ENV] ?? "";
 
-  const hasAnyKey = Object.values(apiKeys).some((k) => k.length > 0);
-  if (!hasAnyKey) {
-    console.error("chat handler: no API keys configured");
+  if (!apiKey || !upstreamUrl) {
+    console.error("chat handler: missing gateway configuration");
     return jsonResponse(
       500,
-      errorBody("MISSING_SECRET", "Chat backend not configured")
+      errorBody("MISSING_SECRET", "AI gateway chat backend not configured")
     );
   }
 
@@ -114,10 +85,9 @@ export default async (req: Request): Promise<Response> => {
     );
   }
 
-  let messages;
-  let provider;
+  let messages: ChatTurn[];
   try {
-    ({ messages, provider } = parseChatRequest(rawBody));
+    ({ messages } = parseChatRequest(rawBody));
   } catch (err) {
     if (err instanceof InvalidRequestError) {
       return jsonResponse(400, errorBody("INVALID_REQUEST", err.message));
@@ -141,23 +111,53 @@ export default async (req: Request): Promise<Response> => {
     );
   }
 
-  // Fallback happens during time-to-first-token; only after a provider commits
-  // its first chunk do we start streaming a 200 SSE response. If every provider
-  // fails before the first token, return a clean JSON error instead.
   try {
-    const { provider: usedProvider, stream } = await openStreamWithFallback(
-      provider,
-      { systemPrompt, history: messages, apiKeys }
-    );
-    return buildSseResponse(usedProvider, stream);
-  } catch (err) {
-    if (err instanceof UpstreamError) {
-      console.error("chat handler: upstream error", err.message);
-    } else {
-      console.error("chat handler: unexpected model error", err);
+    const upstream = await fetch(upstreamUrl, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        accept: "text/event-stream",
+        authorization: `Bearer ${apiKey}`,
+        "x-ai-gateway-key": apiKey
+      },
+      body: JSON.stringify({
+        model: DEFAULT_CHAT_MODEL,
+        stream: true,
+        messages: [{ role: "system", content: systemPrompt }, ...messages]
+      })
+    });
+
+    if (!upstream.ok) {
+      let parsed: unknown;
+      try {
+        parsed = await upstream.json();
+      } catch {
+        return jsonResponse(
+          upstream.status >= 400 && upstream.status < 500 ? upstream.status : 502,
+          errorBody("UPSTREAM_ERROR", "Model request failed")
+        );
+      }
+
+      const { code, message } = parseUpstreamErrorPayload(parsed);
+      return jsonResponse(
+        upstream.status >= 400 && upstream.status < 500 ? upstream.status : 502,
+        errorBody(code, message)
+      );
     }
+
+    return new Response(upstream.body, {
+      status: 200,
+      headers: {
+        "content-type":
+          upstream.headers.get("content-type") || "text/event-stream; charset=utf-8",
+        "cache-control": "no-cache, no-transform",
+        connection: "keep-alive"
+      }
+    });
+  } catch (err) {
+    console.error("chat handler: upstream request failed", err);
     return jsonResponse(
-      500,
+      502,
       errorBody("UPSTREAM_ERROR", "Model request failed")
     );
   }

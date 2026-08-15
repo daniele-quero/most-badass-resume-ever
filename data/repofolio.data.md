@@ -3,6 +3,18 @@
 Public repositories on GitHub under `daniele-quero`. Source: https://github.com/daniele-quero?tab=repositories.
 Contributions to non-personal repositories are also included (to be searched in https://github.com/daniele-quero).
 
+## cook
+
+- An Italian recipe book built from Markdown recipes, guides, and SOPs, with a Next.js web app for browsing, searching, filtering, and viewing recipe details.
+- Uses TypeScript, React, Tailwind CSS, Fuse.js, React Markdown, and Netlify; includes a contextual streaming AI chat for each recipe, PWA support, and server-side recipe loading.
+- Link: https://github.com/daniele-quero/cook
+
+## ai-gateway
+
+- A reusable AI gateway deployable on Netlify Functions that centralizes API-key-protected text and multimodal requests across multiple AI providers.
+- Built almost entirely with TypeScript and includes provider fallback, model routing aliases, SSE streaming, per-app CORS and rate limits, secure app-key management, and an exportable TypeScript client.
+- Link: https://github.com/daniele-quero/ai-gateway
+
 ## pagopa-platform-integration-test (contributions)
 
 - Integration test repository for the PagoPA platform: collects BDD scenarios and automation scripts for API, integration, and end-to-end test suites; suites are written mainly in Python with Behave/Gherkin and produce Allure reports, with some historical Cucumber.js and Playwright suites.
@@ -18,8 +30,8 @@ Contributions to non-personal repositories are also included (to be searched in 
 ## most-badass-resume-ever
 
 - This very app!
-- A PWA single-page resume built with React + TypeScript + Vite, styled as a Fallout CRT terminal with scanlines, glow effects, and a green/amber palette. Features accessible in-page tab navigation, an AI chat relay via Netlify Functions (Gemini/Groq fallback), and full PWA support with service worker and offline caching.
-- Lots of other AI stuff, including a custom system prompt, skill, agents...
+- A PWA single-page resume built with React + TypeScript + Vite, styled as a Fallout CRT terminal with scanlines, glow effects, and a green/amber palette. Features accessible in-page tab navigation, an AI chat relay via Netlify Functions that forwards streaming OpenAPI requests to the `auto:fast` model, and full PWA support with service worker and offline caching.
+- Lots of other AI stuff, including a custom system prompt, skill, agents, and a fixed server-side gateway configuration.
 - The codebase is JavaScript 64%, TypeScript 31%, and CSS 4%, with Vitest + Testing Library for unit tests and ESLint for linting.
 - Link: https://github.com/daniele-quero/most-badass-resume-ever
 

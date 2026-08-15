@@ -2,9 +2,6 @@ import { type FormEvent, useEffect, useRef, useState } from "react";
 import {
   ChatClientError,
   type ChatTurn,
-  type ProviderId,
-  PROVIDER_IDS,
-  PROVIDER_LABELS,
   sendChatStream
 } from "../lib/chatClient";
 import {
@@ -32,7 +29,6 @@ export function Chat() {
   const [draft, setDraft] = useState(initialState.draft);
   const [status, setStatus] = useState<ChatStatus>(initialState.status);
   const [lastError, setLastError] = useState<string | null>(initialState.lastError);
-  const [provider, setProvider] = useState<ProviderId>(initialState.provider);
   const abortRef = useRef<AbortController | null>(null);
   const stateRef = useRef<ChatViewState>(initialState);
 
@@ -40,13 +36,12 @@ export function Chat() {
     messages,
     draft,
     status,
-    lastError,
-    provider
+    lastError
   };
 
   useEffect(() => {
     setPersistedChatState(stateRef.current);
-  }, [messages, draft, status, lastError, provider]);
+  }, [messages, draft, status, lastError]);
 
   useEffect(() => {
     return () => {
@@ -70,7 +65,6 @@ export function Chat() {
     try {
       await sendChatStream(
         history,
-        provider,
         {
           onDelta: (text) => {
             acc += text;
@@ -127,22 +121,6 @@ export function Chat() {
         <p className="chat-hint">
           Digital twin of Daniele Quero - ask about his professional background.
         </p>
-        <label className="chat-provider-label" htmlFor="chat-provider">
-          Provider
-          <select
-            id="chat-provider"
-            className="chat-provider-select"
-            value={provider}
-            onChange={(e) => setProvider(e.target.value as ProviderId)}
-            disabled={status === "sending"}
-          >
-            {PROVIDER_IDS.map((id) => (
-              <option key={id} value={id}>
-                {PROVIDER_LABELS[id]}
-              </option>
-            ))}
-          </select>
-        </label>
       </div>
 
       <ul className="chat-log" aria-live="polite" aria-label="Chat history">

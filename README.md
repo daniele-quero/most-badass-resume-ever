@@ -101,15 +101,15 @@ Il componente tabs implementa:
 
 ## Chat AI
 
-La chat usa le Netlify Functions in `src/components/Chat.tsx` e mostra le risposte in streaming mentre arrivano.
+La chat usa un backend Netlify che inoltra le richieste a un'API OpenAPI in streaming, usando il modello `auto:fast` fissato dal server. La scelta del provider/modello è rimossa dall'interfaccia e il frontend invia solo la cronologia e il prompt costruito dal profilo.
 
-Il backend prova i provider in fallback e si ferma sul primo token disponibile; se il provider preferito non risponde in tempo, passa al successivo.
+Il backend applica il prompt di sistema costruito da `data/*.data.md` e inoltra la richiesta in stream all'endpoint OpenAPI definito in [openapi.yaml](openapi.yaml). Per il nuovo canale, il secret Netlify configurato è `AI_GATEWAY_API_KEY`; l'URL del gateway va in `AI_GATEWAY_CHAT_URL`.
 
 Prima di costruire il prompt, il contenuto dei file `data/*.data.md` viene filtrato in memoria: le righe bullet che contengono link o date vengono scartate e la sezione `research` non viene inviata al modello.
 
 Per provarla con le Netlify Functions:
 
-1. crea un `.env` con almeno una chiave `CHAT_GEMINI_API_KEY` o `CHAT_GROQ_API_KEY`;
+1. crea un `.env` con `AI_GATEWAY_API_KEY` e `AI_GATEWAY_CHAT_URL`;
 2. avvia `npx --yes netlify@26.1.0 dev --offline`;
 3. apri l'app su `http://localhost:8888`.
 
