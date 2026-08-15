@@ -34,8 +34,9 @@
 body {
   margin: 0;
   font-size: calc(1rem + var(--font-bump));
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
   color: var(--text-main);
   background:
     radial-gradient(circle at 0% 0%, #1d3218 0%, transparent 45%),
@@ -60,7 +61,8 @@ body::before {
 }
 
 #root {
-  height: 100vh;
+  min-height: 100vh;
+  height: auto;
   padding: 1rem;
 }
 
@@ -70,7 +72,8 @@ body::before {
   display: grid;
   grid-template-columns: minmax(250px, 320px) 1fr;
   gap: 1rem;
-  height: calc(100vh - 2rem);
+  min-height: calc(100vh - 2rem);
+  height: auto;
 }
 
 .terminal-panel {
@@ -141,7 +144,7 @@ body::before {
   display: grid;
   grid-template-rows: auto auto minmax(250px, 1fr);
   gap: 1rem;
-  height: 100%;
+  height: auto;
   min-height: 0;
 }
 
