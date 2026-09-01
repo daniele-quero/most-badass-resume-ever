@@ -1,3 +1,5 @@
+import { navigateToCvBuilder } from "../../routes";
+
 const C1_CERTIFICATE_PDF_URL = "/Daniele_QUERO_Certificate_of_Language_Proficiency_full_version.pdf";
 
 type ProfileSummaryProps = {
@@ -48,6 +50,11 @@ export function ProfileSummary({ isCollapsed = false }: ProfileSummaryProps) {
           </a>
         </li>
         <li>Email: Ask me via LinkedIn!</li>
+        <li>
+          <button type="button" className="pdf-builder-link" onClick={navigateToCvBuilder}>
+            Download PDF Resume →
+          </button>
+        </li>
       </ul>
     </aside>
   );

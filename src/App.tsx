@@ -4,6 +4,8 @@ import { Tabs } from "./components/Tabs";
 import { HeroHeader } from "./components/resume/HeroHeader";
 import { ProfileSummary } from "./components/resume/ProfileSummary";
 import { WELCOME_TAB_ID, resumeTabs } from "./components/resume/resumeTabs";
+import { CvPdfBuilderPage } from "./pages/CvPdfBuilderPage";
+import { isCvBuilderRoute } from "./routes";
 
 const MOBILE_MEDIA_QUERY = "(max-width: 980px)";
 
@@ -21,6 +23,7 @@ function App() {
   const [isMobileSummaryOpen, setIsMobileSummaryOpen] = useState(
     () => !getIsMobileViewport()
   );
+  const [isCvBuilderOpen, setIsCvBuilderOpen] = useState(isCvBuilderRoute);
   // La chat segue la tab Welcome, cosi il layout resta sempre montato.
   const isWelcomeTabActive = activeTabId === WELCOME_TAB_ID;
 
@@ -101,6 +104,29 @@ function App() {
       document.body.removeAttribute(attr);
     };
   }, [isMobileViewport, activeTabId]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const handleHashChange = () => {
+      setIsCvBuilderOpen(isCvBuilderRoute());
+    };
+
+    window.addEventListener("hashchange", handleHashChange);
+    return () => {
+      window.removeEventListener("hashchange", handleHashChange);
+    };
+  }, []);
+
+  if (isCvBuilderOpen) {
+    return (
+      <div className="vault-shell vault-shell-single">
+        <CvPdfBuilderPage />
+      </div>
+    );
+  }
 
   return (
     <div className="vault-shell">
