@@ -4,6 +4,8 @@ Hard and soft skills. One entry per skill or grouped set.
 ## AI Skills
 
 - GitHub Copilot
+- GitHub Copilot Agent Mode
+- Claude Code
 - AI Agent Governance
 - Prompt Engineering
 - Instruction Design

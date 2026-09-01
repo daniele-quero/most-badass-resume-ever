@@ -291,6 +291,73 @@ body::before {
   color: var(--amber);
 }
 
+.perk-card {
+  position: relative;
+  margin-top: 0.75rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid rgba(76, 241, 125, 0.65);
+  border-radius: 6px;
+  background: rgba(9, 19, 10, 0.88);
+  box-shadow: var(--glow-green);
+}
+
+.perk-badge {
+  display: inline-block;
+  margin-bottom: 0.6rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 2px;
+  background: var(--amber);
+  color: #2b1c04;
+  font-size: calc(0.68rem + var(--font-bump));
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.perk-body {
+  display: flex;
+  gap: 0.85rem;
+  align-items: flex-start;
+}
+
+.perk-icon {
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+}
+
+.perk-name {
+  margin: 0 0 0.3rem;
+  color: var(--amber);
+  font-size: calc(1.1rem + var(--font-bump));
+  letter-spacing: 0.03em;
+}
+
+.perk-effect {
+  margin: 0 0 0.55rem;
+  color: var(--text-main);
+  font-size: calc(0.86rem + var(--font-bump));
+}
+
+.perk-value {
+  color: var(--chat-daniele);
+  font-size: calc(0.98rem + var(--font-bump));
+}
+
+.perk-footer {
+  margin: 0;
+  padding-top: 0.5rem;
+  border-top: 1px dashed rgba(76, 241, 125, 0.4);
+  color: var(--text-soft);
+  font-size: calc(0.72rem + var(--font-bump));
+  letter-spacing: 0.03em;
+}
+
+@media (max-width: 640px) {
+  .perk-body {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
 .chat-shell {
   display: grid;
   gap: 0.75rem;
