@@ -1,4 +1,5 @@
 import skillsRaw from "../../../../data/skills.data.md?raw";
+import { AiHoursPerk } from "../AiHoursPerk";
 import { SectionBlock } from "../SectionBlock";
 import { splitMarkdownSections } from "../markdownSection";
 
@@ -20,6 +21,7 @@ export function SkillsSection() {
               <li key={`${title}-${item}`}>{item}</li>
             ))}
           </ul>
+          {title.trim() === "AI Skills" && <AiHoursPerk />}
         </SectionBlock>
       ))}
     </>
