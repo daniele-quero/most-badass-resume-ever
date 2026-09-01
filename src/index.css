@@ -590,6 +590,150 @@ body::before {
   cursor: not-allowed;
 }
 
+.pdf-builder-link {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: var(--amber);
+  font: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  transition: text-decoration-color 120ms ease-in-out;
+}
+
+.pdf-builder-link:hover,
+.pdf-builder-link:focus-visible {
+  text-decoration-color: var(--amber);
+}
+
+.pdf-builder-link:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+}
+
+.vault-shell-single {
+  grid-template-columns: 1fr;
+}
+
+.pdf-builder-page {
+  padding: 1.5rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.pdf-back-link {
+  align-self: flex-start;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  color: var(--text-soft);
+  font: inherit;
+  cursor: pointer;
+}
+
+.pdf-back-link:hover,
+.pdf-back-link:focus-visible {
+  color: var(--amber);
+}
+
+.pdf-builder-intro {
+  margin: 0;
+  color: var(--text-soft);
+}
+
+.pdf-checklist,
+.pdf-theme-options {
+  border: 1px solid rgba(76, 241, 125, 0.4);
+  border-radius: 6px;
+  padding: 0.9rem 1rem;
+  display: grid;
+  gap: 0.6rem;
+  margin: 0;
+}
+
+.pdf-theme-options {
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  align-items: center;
+  gap: 1.4rem;
+}
+
+.pdf-theme-legend,
+.pdf-checklist legend {
+  padding: 0 0.4rem;
+  color: var(--amber);
+  font-size: calc(0.8rem + var(--font-bump));
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.pdf-checklist-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  cursor: pointer;
+}
+
+.pdf-checklist-item.is-mandatory {
+  opacity: 0.85;
+  cursor: default;
+}
+
+.pdf-checklist-item input[type="checkbox"] {
+  margin-top: 0.2rem;
+  accent-color: var(--panel-edge);
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+}
+
+.pdf-checklist-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.pdf-checklist-hint {
+  color: var(--text-soft);
+  font-size: calc(0.72rem + var(--font-bump));
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.pdf-theme-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.pdf-theme-option input[type="radio"] {
+  accent-color: var(--panel-edge);
+}
+
+.pdf-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.pdf-generate-button {
+  align-self: flex-start;
+}
+
+.pdf-selection-hint {
+  margin: 0;
+  color: var(--text-soft);
+  font-size: calc(0.85rem + var(--font-bump));
+}
+
 .mobile-summary-toggle {
   display: none;
 }

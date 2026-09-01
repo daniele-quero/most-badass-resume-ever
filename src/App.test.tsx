@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { beforeEach } from "vitest";
+import { afterEach, beforeEach } from "vitest";
 import App from "./App";
 import { resetPersistedChatState } from "./components/chatState";
 
@@ -95,5 +95,35 @@ describe("App - chat visibility by active tab", () => {
     const researchLinks = screen.getAllByRole("link", { name: "Link" });
     expect(researchLinks.length).toBeGreaterThan(0);
     expect(screen.queryByText("Article link: https://doi.org/10.1088/1742-6596/703/1/012020")).not.toBeInTheDocument();
+  });
+});
+
+describe("App - CV PDF builder navigation", () => {
+  beforeEach(() => {
+    resetPersistedChatState();
+    window.location.hash = "";
+  });
+
+  afterEach(() => {
+    window.location.hash = "";
+  });
+
+  it("opens the PDF builder page from the sidebar link and hides the resume tabs", () => {
+    render(<App />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Download PDF Resume →" }));
+
+    expect(screen.getByRole("heading", { name: "Build Your PDF Resume" })).toBeInTheDocument();
+    expect(screen.queryByRole("tablist")).not.toBeInTheDocument();
+  });
+
+  it("returns to the resume view via the back link", () => {
+    render(<App />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Download PDF Resume →" }));
+    fireEvent.click(screen.getByRole("button", { name: "← Back to Resume" }));
+
+    expect(screen.getByRole("tablist")).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Build Your PDF Resume" })).not.toBeInTheDocument();
   });
 });
