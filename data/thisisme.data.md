@@ -3,9 +3,8 @@
 Personal identity and character profile.
 ## Identity
 
-- First name: Daniele
-- Last name: Quero
-- Date of birth: 01/10/1988
+Name: Daniele Quero
+Date of birth: 01/10/1988
 
 ## Personality and Character
 
