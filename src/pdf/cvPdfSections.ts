@@ -40,7 +40,7 @@ export const CV_CONTACT = {
   role: "Senior Java/AI Engineer",
   location: "Naples, Italy",
   englishLabel: "English proficiency: C1 certificate",
-  focus: "Focus: AI-augmented inventions and creations",
+  focus: "AI-augmented inventions and creations",
   email: "Email available on request via LinkedIn",
   links: [
     { label: "GitHub", url: "https://github.com/daniele-quero" },

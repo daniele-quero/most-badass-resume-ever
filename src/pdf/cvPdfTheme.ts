@@ -50,9 +50,9 @@ export function createCvPdfStyles(mode: CvPdfThemeMode) {
 
   return StyleSheet.create({
     page: {
-      paddingTop: 34,
-      paddingBottom: 34,
-      paddingHorizontal: 34,
+      paddingTop: 26,
+      paddingBottom: 50,
+      paddingHorizontal: 28,
       fontFamily: "Courier",
       fontSize: 14,
       color: palette.body,
@@ -60,10 +60,10 @@ export function createCvPdfStyles(mode: CvPdfThemeMode) {
     },
     frame: {
       position: "absolute",
-      top: 14,
-      left: 14,
-      right: 14,
-      bottom: 14,
+      top: 10,
+      left: 10,
+      right: 10,
+      bottom: 10,
       borderWidth: 1,
       borderColor: palette.frame
     },
@@ -73,30 +73,45 @@ export function createCvPdfStyles(mode: CvPdfThemeMode) {
       alignItems: "flex-start",
       borderBottomWidth: 1,
       borderBottomColor: palette.frame,
-      paddingBottom: 10,
-      marginBottom: 14
+      paddingBottom: 6,
+      marginBottom: 8
     },
-    name: { fontSize: 26, fontFamily: "Courier-Bold", color: palette.name, letterSpacing: 1 },
-    role: { fontSize: 16, color: palette.role, marginTop: 3 },
+    name: { fontSize: 24, fontFamily: "Courier-Bold", color: palette.name, letterSpacing: 1 },
+    role: { fontSize: 14, color: palette.role, marginTop: 2 },
     contactCol: { alignItems: "flex-end" },
-    contactItem: { fontSize: 13, color: palette.contact, marginBottom: 2 },
-    link: { fontSize: 13, color: palette.link, textDecoration: "none", marginBottom: 2 },
-    section: { marginBottom: 12 },
+    contactItem: { fontSize: 8, color: palette.contact, marginBottom: 1 },
+    link: { fontSize: 8, color: palette.link, textDecoration: "none", marginBottom: 1 },
+    section: { marginBottom: 8 },
     sectionTitle: {
-      fontSize: 15.5,
+      fontSize: 14.5,
       fontFamily: "Courier-Bold",
       color: palette.sectionTitle,
       textTransform: "uppercase",
-      letterSpacing: 1.5,
-      marginBottom: 6
+      letterSpacing: 1.2,
+      marginBottom: 4
     },
-    entry: { marginBottom: 7 },
-    entryTitle: { fontSize: 14.5, fontFamily: "Courier-Bold", color: palette.entryTitle },
-    bullet: { flexDirection: "row", marginTop: 1.5 },
-    bulletDot: { width: 14, fontSize: 14, color: palette.dot },
-    bulletText: { fontSize: 14, flex: 1, lineHeight: 1.3, color: palette.body },
+    entry: { marginBottom: 5 },
+    entryTitle: { fontSize: 13.5, fontFamily: "Courier-Bold", color: palette.entryTitle },
+    bullet: { flexDirection: "row", marginTop: 1 },
+    bulletDot: { width: 12, fontSize: 12.5, color: palette.dot },
+    bulletText: { fontSize: 11, flex: 1, lineHeight: 1.2, color: palette.body },
     skillsGrid: { flexDirection: "row", flexWrap: "wrap", marginTop: 2 },
     skillsGridItem: { width: "33.33%", flexDirection: "row", marginBottom: 3, paddingRight: 6 },
+    aiHoursPerk: {
+      marginTop: 5,
+      borderWidth: 1,
+      borderColor: palette.frame,
+      padding: 7
+    },
+    aiHoursTitle: {
+      fontSize: 13.5,
+      fontFamily: "Courier-Bold",
+      color: palette.role,
+      marginBottom: 3
+    },
+    aiHoursText: { fontSize: 12.5, lineHeight: 1.25, color: palette.body },
+    aiHoursValue: { fontFamily: "Courier-Bold", color: palette.role },
+    aiHoursDetail: { fontSize: 11.5, lineHeight: 1.25, color: palette.contact, marginTop: 3 },
     trainingGrid: { flexDirection: "row", flexWrap: "wrap", marginTop: 2 },
     trainingGridItem: { width: "50%", marginBottom: 8, paddingRight: 10 },
     footer: {

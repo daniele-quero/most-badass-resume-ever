@@ -26,7 +26,7 @@ export function ProfileSummary({ isCollapsed = false }: ProfileSummaryProps) {
             C1
           </a>
         </li>
-        <li>Focus: AI-augmented inventions and creations</li>
+        <li>AI-augmented inventions and creations</li>
         <li>
           GitHub: {" "}
           <a href="https://github.com/daniele-quero" target="_blank" rel="noopener noreferrer">

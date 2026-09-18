@@ -2,14 +2,14 @@ import { useMemo } from "react";
 import { computeAiHours } from "../../lib/aiHours";
 
 export function AiHoursPerk() {
-  const { workingDays, vacationDays, effectiveDays, hours } = useMemo(
+  const { hours } = useMemo(
     () => computeAiHours(),
     []
   );
 
   return (
     <div className="perk-card">
-      <span className="perk-badge">Perk acquired</span>
+      <span className="perk-badge">AI collaboration hours</span>
       <div className="perk-body">
         <svg
           className="perk-icon"
@@ -28,16 +28,10 @@ export function AiHoursPerk() {
           <line x1="23.5" y1="20" x2="31" y2="20" stroke="var(--amber)" strokeWidth="1.5" />
         </svg>
         <div>
-          <p className="perk-name">Synthetic Symbiosis</p>
+          <p className="perk-name">AI collaboration hours</p>
           <p className="perk-effect">
-            Effect: <span className="perk-value">{hours.toLocaleString("en-US")} h</span> of
-            logged co-processing with artificial intelligence since first contact (01.03.2026).
-            <br />
-            Passive resistance: boilerplate code. Immune to writer's block.
-          </p>
-          <p className="perk-footer">
-            {workingDays} working days − {vacationDays} PTO-adjusted days = {effectiveDays} days ×
-            6h/day · live-calculated on load
+            Total: <span className="perk-value">{hours.toLocaleString("en-US")} h</span> in the
+            current collaboration period since 01.03.2026.
           </p>
         </div>
       </div>

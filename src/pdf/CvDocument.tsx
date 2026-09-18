@@ -1,5 +1,6 @@
 import { Document, Link, Page, Text, View } from "@react-pdf/renderer";
 import { splitMarkdownSections, type MarkdownSection } from "../components/resume/markdownSection";
+import { computeAiHours } from "../lib/aiHours";
 import { CV_CONTACT, type CvSectionConfig } from "./cvPdfSections";
 import { createCvPdfStyles, type CvPdfThemeMode } from "./cvPdfTheme";
 
@@ -24,12 +25,13 @@ type CvPdfStyles = ReturnType<typeof createCvPdfStyles>;
 
 function renderBullet(item: string, styles: CvPdfStyles) {
   const linked = detectLinkedBullet(item);
+  const bulletTextStyle = [styles.bulletText];
 
   if (linked) {
     return (
       <View style={styles.bullet} key={item}>
         <Text style={styles.bulletDot}>{">"}</Text>
-        <Link src={linked.url} style={[styles.bulletText, styles.link]}>
+        <Link src={linked.url} style={[bulletTextStyle, styles.link]}>
           {linked.label}
         </Link>
       </View>
@@ -39,7 +41,7 @@ function renderBullet(item: string, styles: CvPdfStyles) {
   return (
     <View style={styles.bullet} key={item}>
       <Text style={styles.bulletDot}>{">"}</Text>
-      <Text style={styles.bulletText}>{item}</Text>
+      <Text style={bulletTextStyle}>{item}</Text>
     </View>
   );
 }
@@ -59,7 +61,7 @@ function renderSkillsGrid(items: string[], styles: CvPdfStyles) {
 
 function renderTrainingGridItem(entry: MarkdownSection, styles: CvPdfStyles) {
   return (
-    <View style={styles.trainingGridItem} key={entry.title} wrap={false}>
+    <View style={styles.trainingGridItem} key={entry.title}>
       <Text style={styles.entryTitle}>{entry.title}</Text>
       {entry.items.map((item) => renderBullet(item, styles))}
     </View>
@@ -68,9 +70,23 @@ function renderTrainingGridItem(entry: MarkdownSection, styles: CvPdfStyles) {
 
 function renderEntryBlock(entry: MarkdownSection, styles: CvPdfStyles, isSkills: boolean) {
   return (
-    <View style={styles.entry} key={entry.title} wrap={false}>
+    <View style={styles.entry} key={entry.title}>
       <Text style={styles.entryTitle}>{entry.title}</Text>
       {isSkills ? renderSkillsGrid(entry.items, styles) : entry.items.map((item) => renderBullet(item, styles))}
+    </View>
+  );
+}
+
+function renderAiHoursPerk(styles: CvPdfStyles) {
+  const { hours } = computeAiHours();
+
+  return (
+    <View style={styles.aiHoursPerk}>
+      <Text style={styles.aiHoursTitle}>AI collaboration hours</Text>
+      <Text style={styles.aiHoursText}>
+        Total: <Text style={styles.aiHoursValue}>{hours.toLocaleString("en-US")} h</Text> in the current
+        collaboration period since 01.03.2026.
+      </Text>
     </View>
   );
 }
@@ -80,13 +96,11 @@ function renderSection(section: CvSectionConfig, styles: CvPdfStyles) {
   const sectionTitle = <Text style={styles.sectionTitle}>{`// ${section.label}`}</Text>;
 
   if (section.id === "training") {
-    // Grid rows carry two entries side by side; keep the title glued to the first
-    // row so "// TRAINING" can never end up as the last line on a page.
     const [firstRow, restRows] = [entries.slice(0, 2), entries.slice(2)];
 
     return (
       <View style={styles.section} key={section.id}>
-        <View wrap={false}>
+        <View minPresenceAhead={80}>
           {sectionTitle}
           <View style={styles.trainingGrid}>
             {firstRow.map((entry) => renderTrainingGridItem(entry, styles))}
@@ -104,11 +118,12 @@ function renderSection(section: CvSectionConfig, styles: CvPdfStyles) {
 
   return (
     <View style={styles.section} key={section.id}>
-      <View wrap={false}>
+      <View minPresenceAhead={80}>
         {sectionTitle}
         {firstEntry && renderEntryBlock(firstEntry, styles, isSkills)}
       </View>
       {restEntries.map((entry) => renderEntryBlock(entry, styles, isSkills))}
+      {isSkills && renderAiHoursPerk(styles)}
     </View>
   );
 }
