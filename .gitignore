@@ -13,3 +13,4 @@ build/
 *.docx
 *resume.pdf
 data/thisisme.data.md
+/netlify.deploy.lock

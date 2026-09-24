@@ -3,6 +3,18 @@
 Public repositories on GitHub under `daniele-quero`. Source: https://github.com/daniele-quero?tab=repositories.
 Contributions to non-personal repositories are also included (to be searched in https://github.com/daniele-quero).
 
+## rainmeter
+
+- A Rainmeter customization repository containing the `CopilotDayProgress` and `illustro` skin/configuration collections.
+- Uses PowerShell and Lua, with the repository organised as installable Rainmeter skin folders and project guidance in `AGENTS.md`.
+- Link: https://github.com/daniele-quero/rainmeter
+
+## ace
+
+- A project-agnostic Agentic Context Engineering kit that turns agent-session traces into evidence-backed, versioned playbook lessons.
+- Built in JavaScript with an installer prompt, reflector/curator/warden workflow, deterministic validation scripts, playbook templates, and runtime tests.
+- Link: https://github.com/daniele-quero/ace
+
 ## cook
 
 - An Italian recipe book built from Markdown recipes, guides, and SOPs, with a Next.js web app for browsing, searching, filtering, and viewing recipe details.
